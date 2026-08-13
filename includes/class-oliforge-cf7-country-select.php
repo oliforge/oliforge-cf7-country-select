@@ -313,24 +313,27 @@ final class OliForge_CF7_Country_Select {
 	}
 
 	/**
-	 * Replaces the ISO alpha-2 code in mail-tags (e.g. [country]) with the
-	 * full, translated country name. The submitted value stays the
-	 * canonical ISO code everywhere else (validation, webhooks, etc.).
+	 * Replaces the ISO alpha-2 code in mail-tags (e.g. [country]) with
+	 * "Country name (CODE)". The submitted value stays the canonical ISO
+	 * code everywhere else (validation, webhooks, etc.).
 	 */
 	public static function replace_mail_tag_with_country_name( $replaced, $submitted, $html, $mail_tag ) {
 		if ( ! is_string( $replaced ) || '' === $replaced ) {
 			return $replaced;
 		}
 
+		$code     = strtoupper( trim( $replaced ) );
 		$form_tag = $mail_tag->corresponding_form_tag();
 		$language = $form_tag ? self::resolve_language( $form_tag->get_option( 'language', '', true ) ) : self::resolve_language();
 
-		$name = self::translate_country_name( $replaced, $language );
+		$name = self::translate_country_name( $code, $language );
 		if ( '' === $name ) {
 			return $replaced;
 		}
 
-		return $html ? esc_html( $name ) : $name;
+		$label = sprintf( '%1$s (%2$s)', $name, $code );
+
+		return $html ? esc_html( $label ) : $label;
 	}
 
 	public static function register_settings_page(): void {
