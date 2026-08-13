@@ -1,6 +1,6 @@
 <?php
 /**
- * Uninstall cleanup for OliForge™ Country Select for Contact Form 7.
+ * Uninstall cleanup for OliForge Country Select for Contact Form 7.
  *
  * @package OliForge_CF7_Country_Select
  */

@@ -36,6 +36,8 @@ final class OliForge_CF7_Country_Select {
 		add_action( 'wpcf7_admin_init', array( __CLASS__, 'register_tag_generator' ), 30 );
 		add_filter( 'wpcf7_validate_country_select', array( __CLASS__, 'validate' ), 10, 2 );
 		add_filter( 'wpcf7_validate_country_select*', array( __CLASS__, 'validate' ), 10, 2 );
+		add_filter( 'wpcf7_mail_tag_replaced_country_select', array( __CLASS__, 'replace_mail_tag_with_country_name' ), 10, 4 );
+		add_filter( 'wpcf7_mail_tag_replaced_country_select*', array( __CLASS__, 'replace_mail_tag_with_country_name' ), 10, 4 );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'register_settings_page' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
@@ -63,8 +65,9 @@ final class OliForge_CF7_Country_Select {
 			return $panel_id . '-' . sanitize_html_class( $suffix );
 		};
 		?>
+
 		<header class="description-box">
-			<h3><?php echo esc_html__( 'OliForge™ Country Select', 'oliforge-cf7-country-select' ); ?></h3>
+			<h3><?php echo esc_html__( 'OliForge Country Select', 'oliforge-cf7-country-select' ); ?></h3>
 			<p><?php echo esc_html__( 'Generate a searchable country selector with local flags, translations, filtering and Contact Form 7 validation.', 'oliforge-cf7-country-select' ); ?></p>
 		</header>
 		<div class="control-box">
@@ -309,6 +312,27 @@ final class OliForge_CF7_Country_Select {
 		return $result;
 	}
 
+	/**
+	 * Replaces the ISO alpha-2 code in mail-tags (e.g. [country]) with the
+	 * full, translated country name. The submitted value stays the
+	 * canonical ISO code everywhere else (validation, webhooks, etc.).
+	 */
+	public static function replace_mail_tag_with_country_name( $replaced, $submitted, $html, $mail_tag ) {
+		if ( ! is_string( $replaced ) || '' === $replaced ) {
+			return $replaced;
+		}
+
+		$form_tag = $mail_tag->corresponding_form_tag();
+		$language = $form_tag ? self::resolve_language( $form_tag->get_option( 'language', '', true ) ) : self::resolve_language();
+
+		$name = self::translate_country_name( $replaced, $language );
+		if ( '' === $name ) {
+			return $replaced;
+		}
+
+		return $html ? esc_html( $name ) : $name;
+	}
+
 	public static function register_settings_page(): void {
 		add_options_page(
 			__( 'OliForge Country Select', 'oliforge-cf7-country-select' ),
@@ -407,7 +431,11 @@ final class OliForge_CF7_Country_Select {
 		$preview_countries = self::get_translated_countries( $preview_language );
 		?>
 		<div class="wrap oliforge-country-settings">
-			<h1><?php echo esc_html__( 'OliForge™ Country Select', 'oliforge-cf7-country-select' ); ?></h1>
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <img src="<?php echo esc_url( OLIFORGE_CF7_COUNTRY_SELECT_URL . 'src/OliForge_logo.png' ); ?>" alt="<?php esc_attr_e( 'OliForge', 'oliforge-cf7-country-select' ); ?>" width="64" height="64" style="vertical-align:middle;margin-right:8px;" />
+                <h1 style="color:black; font-weight: bolder"><?php esc_html_e( 'OliForge Plugins', 'oliforge-cf7-country-select' ); ?></h1>
+            </div>
+			<h1><?php echo esc_html__( 'OliForge Country Select For Contact Form 7', 'oliforge-cf7-country-select' ); ?></h1>
 			<p><?php echo esc_html__( 'Choose which countries are available in all Contact Form 7 country selectors. All countries are enabled by default.', 'oliforge-cf7-country-select' ); ?></p>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'oliforge_cf7_country_select_settings' ); ?>

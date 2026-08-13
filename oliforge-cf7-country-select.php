@@ -19,10 +19,16 @@ define( 'OLIFORGE_CF7_COUNTRY_SELECT_URL', plugin_dir_url( __FILE__ ) );
 
 require_once OLIFORGE_CF7_COUNTRY_SELECT_DIR . 'includes/class-oliforge-cf7-country-select.php';
 
+add_filter( 'plugin_action_links_' . plugin_basename( OLIFORGE_CF7_COUNTRY_SELECT_FILE ), static function ( $links ) {
+	$settings_link = '<a href="' . esc_url( admin_url( 'options-general.php?page=oliforge-cf7-country-select' ) ) . '">' . esc_html__( 'Settings', 'oliforge-cf7-country-select' ) . '</a>';
+	array_unshift( $links, $settings_link );
+	return $links;
+} );
+
 add_action( 'plugins_loaded', static function () {
     if ( ! defined( 'WPCF7_VERSION' ) ) {
         add_action( 'admin_notices', static function () {
-            echo '<div class="notice notice-warning"><p>' . esc_html__( 'OliForge™ Country Select requires Contact Form 7 to be active.', 'oliforge-cf7-country-select' ) . '</p></div>';
+            echo '<div class="notice notice-warning"><p>' . esc_html__( 'OliForge Country Select requires Contact Form 7 to be active.', 'oliforge-cf7-country-select' ) . '</p></div>';
         } );
         return;
     }
