@@ -5,7 +5,7 @@ Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
-Stable tag: 3.1.1
+Stable tag: 3.2.0
 License: GPLv2 or later
 
 Adds a searchable, multilingual country selector with local SVG flags and server-side validation to Contact Form 7.
@@ -30,6 +30,8 @@ Features:
 * Per-field include, exclude, preferred-country and default-country controls.
 * Support for id, class, tabindex, autocomplete, aria-* and data-* form-tag attributes.
 * Placeholder can be selected again to clear the field; required fields then fail validation correctly.
+* Save named country lists (list:slug) from the settings page and restrict any field to one list.
+* Mail-tag output shows the full translated country name with its ISO code, e.g. Ukraine (UA); submitted values used by integrations remain the plain ISO code.
 
 == Installation ==
 1. Install and activate Contact Form 7.
@@ -63,6 +65,7 @@ Advanced examples:
 [country_select country exclude:RU,BY]
 [country_select country preferred:UA,PL,DE default:UA]
 [country_select country default:auto]
+[country_select country list:eu]
 
 The default:auto option uses the region part of the current WordPress locale when available, for example uk_UA => UA.
 
@@ -79,6 +82,8 @@ Available display languages:
 * Русский.
 
 All countries are enabled by default. Administrators may search, select all, clear all or enable countries individually.
+
+Administrators can also create named country lists (a slug plus a subset of countries) using a two-column picker. Each list saves and deletes independently of the others and of the settings above. A list's slug can then be referenced from any field with list:slug to show only that list.
 
 == Developer API ==
 
@@ -112,6 +117,13 @@ The ISO 3166-1 alpha-2 code is submitted. Translation affects display only.
 Automatic mode falls back to English.
 
 == Changelog ==
+
+= 3.2.0 =
+* Added named country lists: save a slug plus a subset of countries from the settings page and restrict any field to it with list:slug.
+* Each country list now has its own Save and Delete buttons and saves independently of the other lists and of the settings above, with duplicate-slug protection on both the browser and the server.
+* Country pickers (allowed countries and each list) use a two-column "available / selected" transfer control with per-column search.
+* [country] and other country_select mail-tags now output the full translated country name with its ISO code, e.g. "Ukraine (UA)", instead of the bare code; submitted values used by integrations are unaffected and remain the plain ISO code.
+* Redesigned the settings page with the OliForge brand system: header, cards, buttons, selects, checkboxes and a self-dismissing save confirmation.
 
 = 3.1.1 =
 * Sanitized submitted country values before validation and retrieval.
