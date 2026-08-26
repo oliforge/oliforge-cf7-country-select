@@ -487,9 +487,12 @@ final class OliForge_CF7_Country_Select {
 			}
 
 			if ( '' !== $slug ) {
-				$codes = array();
-				foreach ( (array) ( $_POST['countries'] ?? array() ) as $code ) {
-					$code = self::normalize_country_code( is_string( $code ) ? wp_unslash( $code ) : '' );
+				$codes            = array();
+				$posted_countries = isset( $_POST['countries'] )
+					? array_map( 'sanitize_text_field', wp_unslash( (array) $_POST['countries'] ) )
+					: array();
+				foreach ( $posted_countries as $code ) {
+					$code = self::normalize_country_code( is_string( $code ) ? $code : '' );
 					if ( '' !== $code && isset( self::$countries[ $code ] ) ) {
 						$codes[] = $code;
 					}

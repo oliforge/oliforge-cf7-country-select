@@ -33,34 +33,65 @@
     color: inherit;
 }
 
+/*
+ * Theme compatibility geometry.
+ * The visible border/background/radius live on this row, not on the input,
+ * so the flag and chevron sit inside the same bordered box as normal flex
+ * items instead of absolutely-positioned overlays. That's what lets the
+ * input itself stay borderless and padding-free (below) — its intrinsic
+ * width then matches a plain theme text field with the same `size`
+ * attribute, instead of being inflated by icon-clearance padding that some
+ * themes' shrink-to-fit <label> sizing would otherwise pick up on.
+ */
 .oliforge-cf7-country-select__control-wrap {
     position: relative;
-    display: block !important;
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
     inline-size: 100% !important;
     width: 100% !important;
     min-inline-size: 0 !important;
     min-width: 0 !important;
     max-inline-size: 100% !important;
     max-width: 100% !important;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid var(--oliforge-country-border);
+    border-radius: var(--oliforge-country-radius);
+    background: var(--oliforge-country-bg);
+    cursor: pointer;
+}
+
+.oliforge-cf7-country-select__control-wrap:has(> .oliforge-cf7-country-select__control:focus) {
+    border-color: currentColor;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, .08);
+}
+
+.oliforge-cf7-country-select.has-validation-border .oliforge-cf7-country-select__control-wrap:has(> .oliforge-cf7-country-select__control.wpcf7-not-valid) {
+    border-color: #dc3232;
 }
 
 /*
- * Theme compatibility geometry.
- * Author classes are intentionally kept on the visible input so typography,
- * colors, borders and radii can come from the theme. Only layout dimensions
- * are protected here, preventing fixed-width theme rules from separating the
- * input from its flag and chevron.
+ * Typography (font, color) is still inherited from whatever author/theme
+ * classes get copied onto the input, so text styling stays consistent with
+ * the rest of the form. Only box geometry is reset here.
  */
 .oliforge-cf7-country-select__control {
     display: block !important;
-    inline-size: 100% !important;
-    width: 100% !important;
+    flex: 1 1 auto !important;
+    inline-size: auto;
+    width: auto;
     min-inline-size: 0 !important;
     min-width: 0 !important;
     max-inline-size: 100% !important;
     max-width: 100% !important;
-    flex: 1 1 100% !important;
     box-sizing: border-box !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
     cursor: pointer;
     text-overflow: ellipsis;
     caret-color: transparent;
@@ -70,45 +101,28 @@
     color: inherit;
 }
 
-.oliforge-cf7-country-select.has-chevron .oliforge-cf7-country-select__control {
-    padding-inline-end: 42px;
-}
-
-.oliforge-cf7-country-select.has-flag.has-chevron .oliforge-cf7-country-select__control {
-    padding-inline-end: 76px;
-}
-
 .oliforge-cf7-country-select__selected-flag {
-    position: absolute;
-    top: 50%;
-    inset-inline-end: 42px;
+    flex: 0 0 auto;
     width: 24px;
     height: 18px;
     object-fit: cover;
-    transform: translateY(-50%);
     pointer-events: none;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, .08);
 }
 
-.oliforge-cf7-country-select:not(.has-chevron) .oliforge-cf7-country-select__selected-flag {
-    inset-inline-end: 14px;
-}
-
 .oliforge-cf7-country-select__chevron {
-    position: absolute;
-    top: 50%;
-    inset-inline-end: 17px;
+    flex: 0 0 auto;
     width: 8px;
     height: 8px;
     border-right: 2px solid currentColor;
     border-bottom: 2px solid currentColor;
-    transform: translateY(-65%) rotate(45deg);
+    transform: rotate(45deg);
     transition: transform .2s ease;
     pointer-events: none;
 }
 
 .oliforge-cf7-country-select__control[aria-expanded="true"] ~ .oliforge-cf7-country-select__chevron {
-    transform: translateY(-35%) rotate(225deg);
+    transform: rotate(225deg);
 }
 
 .oliforge-cf7-country-select__dropdown {
@@ -201,14 +215,6 @@
 
 .oliforge-cf7-country-select [hidden] {
     display: none !important;
-}
-
-.oliforge-cf7-country-select.has-validation-border .oliforge-cf7-country-select__control.wpcf7-not-valid {
-    border-color: #dc3232;
-}
-
-.oliforge-cf7-country-select:not(.has-validation-border) .oliforge-cf7-country-select__control.wpcf7-not-valid {
-    box-shadow: none;
 }
 
 .oliforge-cf7-country-select + .wpcf7-not-valid-tip,
