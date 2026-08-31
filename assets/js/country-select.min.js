@@ -168,6 +168,34 @@
       syncValidationState();
     };
 
+    const loadDeferredFlag = (img) => {
+      if (!img?.dataset.src) return;
+      img.src = img.dataset.src;
+      img.removeAttribute('data-src');
+    };
+
+    // Observe flags against the scrollable list, not the viewport. A small
+    // vertical root margin preloads the next rows just before they scroll into
+    // view while avoiding requests for the rest of the country catalogue.
+    const flagObserver = showFlags && 'IntersectionObserver' in window
+      ? new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            loadDeferredFlag(entry.target);
+            observer.unobserve(entry.target);
+          });
+        }, { root: list, rootMargin: '96px 0px', threshold: 0.01 })
+      : null;
+
+    const observeDeferredFlags = () => {
+      const deferredFlags = list.querySelectorAll('img[data-src]');
+      if (!flagObserver) {
+        deferredFlags.forEach(loadDeferredFlag);
+        return;
+      }
+      deferredFlags.forEach((img) => flagObserver.observe(img));
+    };
+
     const close = (restoreFocus = false) => {
       dropdown.hidden = true;
       control.setAttribute('aria-expanded', 'false');
@@ -179,6 +207,10 @@
     const open = () => {
       dropdown.hidden = false;
       control.setAttribute('aria-expanded', 'true');
+      // Start observing only after the dropdown becomes visible; hidden rows
+      // otherwise have no intersection geometry. Only visible/nearby flags get
+      // a src. Older browsers fall back to loading all deferred flags here.
+      observeDeferredFlags();
       window.requestAnimationFrame(() => (searchEnabled ? search : items[0]?.element)?.focus());
     };
 
@@ -202,7 +234,7 @@
       item.setAttribute('aria-selected', String(option.selected));
       if (showFlags && option.value && option.dataset.flag) {
         const img = document.createElement('img');
-        img.src = option.dataset.flag;
+        img.dataset.src = option.dataset.flag; // assigned lazily in open(), not here
         img.alt = '';
         img.loading = 'lazy';
         item.appendChild(img);

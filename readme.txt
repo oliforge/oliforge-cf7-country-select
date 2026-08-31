@@ -2,10 +2,10 @@
 Contributors: oliforge
 Tags: contact form 7, countries, flags, multilingual, searchable select
 Requires at least: 6.4
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
-Stable tag: 3.2.0
+Stable tag: 3.2.2
 License: GPLv2 or later
 
 Adds a searchable, multilingual country selector with local SVG flags and server-side validation to Contact Form 7.
@@ -107,8 +107,8 @@ Filters the final enabled ISO code => translated name array. Arguments: $allowed
 = Will existing country_select tags continue to work? =
 Yes. The country_select and country_select* Contact Form 7 tags are preserved.
 
-= Does the plugin download flags or translations? =
-No. Flags and all supported country-name translations are bundled locally.
+= Does the plugin use external services for flags or translations? =
+No. Flags and all supported country-name translations are bundled locally. No CDN or external API is required.
 
 = What value is submitted? =
 The ISO 3166-1 alpha-2 code is submitted. Translation affects display only.
@@ -117,6 +117,12 @@ The ISO 3166-1 alpha-2 code is submitted. Translation affects display only.
 Automatic mode falls back to English.
 
 == Changelog ==
+
+= 3.2.2 =
+* Load dropdown flag images only when their rows enter or approach the visible scroll area, with a compatibility fallback for browsers without IntersectionObserver.
+
+= 3.2.1 =
+* Deferred dropdown flag loading until the country selector is first opened, significantly reducing initial page requests.
 
 = 3.2.0 =
 * Added named country lists: save a slug plus a subset of countries from the settings page and restrict any field to it with list:slug.
