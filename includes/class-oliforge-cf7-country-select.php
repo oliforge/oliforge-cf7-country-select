@@ -38,6 +38,7 @@ final class OliForge_CF7_Country_Select {
 		add_filter( 'wpcf7_validate_country_select*', array( __CLASS__, 'validate' ), 10, 2 );
 		add_filter( 'wpcf7_mail_tag_replaced_country_select', array( __CLASS__, 'replace_mail_tag_with_country_name' ), 10, 4 );
 		add_filter( 'wpcf7_mail_tag_replaced_country_select*', array( __CLASS__, 'replace_mail_tag_with_country_name' ), 10, 4 );
+		add_filter( 'wpcf7_posted_data', array( __CLASS__, 'inject_country_names_into_posted_data' ) );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'register_settings_page' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
@@ -607,6 +608,48 @@ final class OliForge_CF7_Country_Select {
 		<?php
 	}
 
+
+	/**
+	 * Exposes the translated country name to code reading submitted form
+	 * data directly (webhooks, CRM connectors, custom mail hooks), which
+	 * otherwise only see the canonical ISO alpha-2 code kept in the field
+	 * itself. Adds a sibling entry named "{field-name}_name" for every
+	 * country_select field on the form.
+	 */
+	public static function inject_country_names_into_posted_data( $posted_data ) {
+		if ( ! is_array( $posted_data ) ) {
+			return $posted_data;
+		}
+
+		$submission   = WPCF7_Submission::get_instance();
+		$contact_form = $submission ? $submission->get_contact_form() : null;
+		if ( ! $contact_form ) {
+			return $posted_data;
+		}
+
+		$tags = $contact_form->scan_form_tags( array( 'basetype' => array( 'country_select' ) ) );
+
+		foreach ( $tags as $tag ) {
+			$name = $tag->name;
+			if ( '' === $name || ! array_key_exists( $name, $posted_data ) ) {
+				continue;
+			}
+
+			$raw  = $posted_data[ $name ];
+			$code = self::normalize_country_code( is_array( $raw ) ? (string) reset( $raw ) : (string) $raw );
+			if ( '' === $code ) {
+				continue;
+			}
+
+			$language     = self::resolve_language( $tag->get_option( 'language', '', true ) );
+			$country_name = self::translate_country_name( $code, $language );
+			if ( '' !== $country_name ) {
+				$posted_data[ $name . '_name' ] = $country_name;
+			}
+		}
+
+		return $posted_data;
+	}
 
 	/** Translate one ISO alpha-2 country code to a supported display language. */
 	public static function translate_country_name( string $code, string $language = 'auto' ): string {

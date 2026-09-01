@@ -5,7 +5,7 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
-Stable tag: 3.2.3
+Stable tag: 3.2.4
 License: GPLv2 or later
 
 Adds a searchable, multilingual country selector with local SVG flags and server-side validation to Contact Form 7.
@@ -99,6 +99,8 @@ Filters one translated country name. Arguments: $name, $code, $language.
 oliforge_country_select_allowed_countries
 Filters the final enabled ISO code => translated name array. Arguments: $allowed, $language.
 
+For every country_select field, the submitted data available via WPCF7_Submission::get_posted_data() also includes a "{field-name}_name" entry holding the translated country name, alongside the canonical ISO code kept under the field's own name. Use it in webhooks, CRM connectors or custom mail hooks that read submitted data directly, instead of the Mail template's [field-name] mail-tag.
+
 == Frequently Asked Questions ==
 
 = Will existing country_select tags continue to work? =
@@ -114,6 +116,9 @@ The ISO 3166-1 alpha-2 code is submitted. Translation affects display only.
 Automatic mode falls back to English.
 
 == Changelog ==
+
+= 3.2.4 =
+* Added a translated country name alongside the submitted ISO code on wpcf7_posted_data, as "{field-name}_name", so webhooks, CRM connectors and custom mail hooks that read submitted data directly (outside the Mail template) can access the readable name without extra code.
 
 = 3.2.3 =
 * Added a public extension API for add-ons to provide saved country lists without duplicating the Free core.
