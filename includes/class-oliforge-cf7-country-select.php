@@ -43,7 +43,9 @@ final class OliForge_CF7_Country_Select {
 		add_action( 'admin_menu', array( __CLASS__, 'register_settings_page' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_assets' ) );
-		add_action( 'admin_post_oliforge_cf7_country_select_manage_list', array( __CLASS__, 'handle_manage_list' ) );
+		if ( OLIFORGE_CF7_COUNTRY_SELECT_PRO ) {
+			add_action( 'admin_post_oliforge_cf7_country_select_manage_list', array( __CLASS__, 'handle_manage_list' ) );
+		}
 	}
 
 
@@ -102,11 +104,15 @@ final class OliForge_CF7_Country_Select {
 
 			<fieldset>
 				<legend><?php echo esc_html__( 'Country lists', 'oliforge-cf7-country-select' ); ?></legend>
-				<label><?php echo esc_html__( 'Saved list slug', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="list:" placeholder="eu" /></label><br>
+				<?php if ( OLIFORGE_CF7_COUNTRY_SELECT_PRO ) : ?>
+					<label><?php echo esc_html__( 'Saved list slug', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="list:" placeholder="eu" /></label><br>
+				<?php endif; ?>
 				<label><?php echo esc_html__( 'Preferred ISO codes', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="preferred:" placeholder="UA,PL,DE" /></label><br>
 				<label><?php echo esc_html__( 'Include only', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="include:" placeholder="UA,PL,DE,FR" /></label><br>
 				<label><?php echo esc_html__( 'Exclude', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="exclude:" placeholder="RU,BY" /></label>
-				<p class="description"><?php echo esc_html__( 'A saved list restricts the field to that list. It combines with preferred/include/exclude.', 'oliforge-cf7-country-select' ); ?></p>
+				<?php if ( OLIFORGE_CF7_COUNTRY_SELECT_PRO ) : ?>
+					<p class="description"><?php echo esc_html__( 'A saved list restricts the field to that list. It combines with preferred/include/exclude.', 'oliforge-cf7-country-select' ); ?></p>
+				<?php endif; ?>
 			</fieldset>
 
 			<fieldset>
@@ -198,7 +204,7 @@ final class OliForge_CF7_Country_Select {
 		$include    = self::parse_country_option( $tag->get_option( 'include', '', true ) );
 		$exclude    = self::parse_country_option( $tag->get_option( 'exclude', '', true ) );
 		$preferred  = self::parse_country_option( $tag->get_option( 'preferred', '', true ) );
-		$list_codes = self::get_country_list_codes( $tag->get_option( 'list', '', true ) );
+		$list_codes = OLIFORGE_CF7_COUNTRY_SELECT_PRO ? self::get_country_list_codes( $tag->get_option( 'list', '', true ) ) : array();
 
 		if ( $include ) {
 			$countries = array_intersect_key( $countries, array_flip( $include ) );
@@ -300,7 +306,7 @@ final class OliForge_CF7_Country_Select {
 		$allowed     = self::get_allowed_countries( 'en' );
 		$include     = self::parse_country_option( $tag->get_option( 'include', '', true ) );
 		$exclude     = self::parse_country_option( $tag->get_option( 'exclude', '', true ) );
-		$list_codes  = self::get_country_list_codes( $tag->get_option( 'list', '', true ) );
+		$list_codes  = OLIFORGE_CF7_COUNTRY_SELECT_PRO ? self::get_country_list_codes( $tag->get_option( 'list', '', true ) ) : array();
 		if ( $include ) {
 			$allowed = array_intersect_key( $allowed, array_flip( $include ) );
 		}
@@ -465,6 +471,9 @@ final class OliForge_CF7_Country_Select {
 	 * or deleting one list never touches any other list or setting.
 	 */
 	public static function handle_manage_list(): void {
+		if ( ! OLIFORGE_CF7_COUNTRY_SELECT_PRO ) {
+			wp_die( esc_html__( 'Saved country lists are available in OliForge Country Select Pro.', 'oliforge-cf7-country-select' ), 403 );
+		}
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to manage country lists.', 'oliforge-cf7-country-select' ), 403 );
 		}
@@ -674,7 +683,7 @@ final class OliForge_CF7_Country_Select {
 		$validation_border = self::sanitize_validation_border( get_option( self::OPTION_VALIDATION_BORDER, '0' ) );
 		$preview_language = self::resolve_language( $language_setting );
 		$preview_countries = self::get_translated_countries( $preview_language );
-		$country_lists     = self::get_country_lists();
+		$country_lists     = OLIFORGE_CF7_COUNTRY_SELECT_PRO ? self::get_country_lists() : array();
 		?>
 		<div class="wrap oliforge-country-settings">
 			<div class="oliforge-header">
@@ -724,6 +733,7 @@ final class OliForge_CF7_Country_Select {
 				<?php submit_button(); ?>
 			</form>
 
+			<?php if ( OLIFORGE_CF7_COUNTRY_SELECT_PRO ) : ?>
 			<h2 id="oliforge-country-lists" class="oliforge-section-title"><?php echo esc_html__( 'Country lists', 'oliforge-cf7-country-select' ); ?></h2>
 			<p class="oliforge-lede"><?php echo esc_html__( 'Save named subsets of countries and use them in any field with list:slug, e.g. [country_select* country list:eu]. Each list has its own Save button and is saved independently of the other lists and settings above.', 'oliforge-cf7-country-select' ); ?></p>
 
@@ -779,6 +789,7 @@ final class OliForge_CF7_Country_Select {
 					</p>
 				</form>
 			</details>
+			<?php endif; ?>
 		</div>
 		<?php
 	}

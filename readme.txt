@@ -12,7 +12,7 @@ Adds a searchable, multilingual country selector with local SVG flags and server
 
 == Description ==
 
-OliForge Country Select for Contact Form 7 provides a custom country_select form tag for Contact Form 7.
+OliForge Country Select for Contact Form 7 provides a custom country_select form tag for Contact Form 7. This Free edition includes global and per-field country filtering; reusable saved country lists are reserved for the Pro edition.
 
 Features:
 * Search countries by translated name or ISO alpha-2 code.
@@ -30,7 +30,6 @@ Features:
 * Per-field include, exclude, preferred-country and default-country controls.
 * Support for id, class, tabindex, autocomplete, aria-* and data-* form-tag attributes.
 * Placeholder can be selected again to clear the field; required fields then fail validation correctly.
-* Save named country lists (list:slug) from the settings page and restrict any field to one list.
 * Mail-tag output shows the full translated country name with its ISO code, e.g. Ukraine (UA); submitted values used by integrations remain the plain ISO code.
 
 == Installation ==
@@ -65,7 +64,6 @@ Advanced examples:
 [country_select country exclude:RU,BY]
 [country_select country preferred:UA,PL,DE default:UA]
 [country_select country default:auto]
-[country_select country list:eu]
 
 The default:auto option uses the region part of the current WordPress locale when available, for example uk_UA => UA.
 
@@ -83,7 +81,6 @@ Available display languages:
 
 All countries are enabled by default. Administrators may search, select all, clear all or enable countries individually.
 
-Administrators can also create named country lists (a slug plus a subset of countries) using a two-column picker. Each list saves and deletes independently of the others and of the settings above. A list's slug can then be referenced from any field with list:slug to show only that list.
 
 == Developer API ==
 
@@ -120,6 +117,7 @@ Automatic mode falls back to English.
 
 = 3.2.2 =
 * Load dropdown flag images only when their rows enter or approach the visible scroll area, with a compatibility fallback for browsers without IntersectionObserver.
+* Free edition excludes reusable saved country lists and list:slug filtering.
 
 = 3.2.1 =
 * Deferred dropdown flag loading until the country selector is first opened, significantly reducing initial page requests.
