@@ -5,7 +5,7 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
-Stable tag: 3.2.2
+Stable tag: 3.2.3
 License: GPLv2 or later
 
 Adds a searchable, multilingual country selector with local SVG flags and server-side validation to Contact Form 7.
@@ -114,6 +114,10 @@ The ISO 3166-1 alpha-2 code is submitted. Translation affects display only.
 Automatic mode falls back to English.
 
 == Changelog ==
+
+= 3.2.3 =
+* Added a public extension API for add-ons to provide saved country lists without duplicating the Free core.
+* Country-list UI and persistence now live exclusively in the Pro add-on.
 
 = 3.2.2 =
 * Load dropdown flag images only when their rows enter or approach the visible scroll area, with a compatibility fallback for browsers without IntersectionObserver.

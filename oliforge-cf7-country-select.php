@@ -2,7 +2,7 @@
 /**
  * Plugin Name: OliForge Country Select for Contact Form 7
  * Description: Adds an accessible, searchable and multilingual country selector with locally bundled SVG flags, administrator-controlled country availability, automatic locale detection and developer filters to Contact Form 7. Part of the OliForge™ plugin suite.
- * Version: 3.2.2
+ * Version: 3.2.3
  * Requires at least: 6.4
  * Requires PHP: 7.4
  * Requires Plugins: contact-form-7
@@ -12,9 +12,7 @@
  */
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-define( 'OLIFORGE_CF7_COUNTRY_SELECT_VERSION', '3.2.2' );
-define( 'OLIFORGE_CF7_COUNTRY_SELECT_PRO', false );
-define( 'OLIFORGE_CF7_COUNTRY_SELECT_FREE_ACTIVE', true );
+define( 'OLIFORGE_CF7_COUNTRY_SELECT_VERSION', '3.2.3' );
 define( 'OLIFORGE_CF7_COUNTRY_SELECT_FILE', __FILE__ );
 define( 'OLIFORGE_CF7_COUNTRY_SELECT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'OLIFORGE_CF7_COUNTRY_SELECT_URL', plugin_dir_url( __FILE__ ) );
@@ -28,10 +26,6 @@ add_filter( 'plugin_action_links_' . plugin_basename( OLIFORGE_CF7_COUNTRY_SELEC
 } );
 
 add_action( 'plugins_loaded', static function () {
-    // When Pro is active, Free stays dormant so both packages can be installed without conflicts.
-    if ( defined( 'OLIFORGE_CF7_COUNTRY_SELECT_PRO_ACTIVE' ) && OLIFORGE_CF7_COUNTRY_SELECT_PRO_ACTIVE ) {
-        return;
-    }
     if ( ! defined( 'WPCF7_VERSION' ) ) {
         add_action( 'admin_notices', static function () {
             echo '<div class="notice notice-warning"><p>' . esc_html__( 'OliForge Country Select requires Contact Form 7 to be active.', 'oliforge-cf7-country-select' ) . '</p></div>';

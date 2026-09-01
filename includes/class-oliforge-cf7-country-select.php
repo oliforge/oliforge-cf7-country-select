@@ -13,7 +13,6 @@ final class OliForge_CF7_Country_Select {
 	private const OPTION_ALLOWED_COUNTRIES = 'oliforge_cf7_country_select_allowed_countries';
 	private const OPTION_DISPLAY_LANGUAGE  = 'oliforge_cf7_country_select_display_language';
 	private const OPTION_VALIDATION_BORDER = 'oliforge_cf7_country_select_validation_border';
-	private const OPTION_COUNTRY_LISTS     = 'oliforge_cf7_country_select_lists';
 
 	/** @var array<string, string> */
 	private static array $countries = array();
@@ -43,9 +42,6 @@ final class OliForge_CF7_Country_Select {
 		add_action( 'admin_menu', array( __CLASS__, 'register_settings_page' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_assets' ) );
-		if ( OLIFORGE_CF7_COUNTRY_SELECT_PRO ) {
-			add_action( 'admin_post_oliforge_cf7_country_select_manage_list', array( __CLASS__, 'handle_manage_list' ) );
-		}
 	}
 
 
@@ -104,15 +100,10 @@ final class OliForge_CF7_Country_Select {
 
 			<fieldset>
 				<legend><?php echo esc_html__( 'Country lists', 'oliforge-cf7-country-select' ); ?></legend>
-				<?php if ( OLIFORGE_CF7_COUNTRY_SELECT_PRO ) : ?>
-					<label><?php echo esc_html__( 'Saved list slug', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="list:" placeholder="eu" /></label><br>
-				<?php endif; ?>
+				<?php do_action( 'oliforge_country_select_tag_generator_country_lists' ); ?>
 				<label><?php echo esc_html__( 'Preferred ISO codes', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="preferred:" placeholder="UA,PL,DE" /></label><br>
 				<label><?php echo esc_html__( 'Include only', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="include:" placeholder="UA,PL,DE,FR" /></label><br>
 				<label><?php echo esc_html__( 'Exclude', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="exclude:" placeholder="RU,BY" /></label>
-				<?php if ( OLIFORGE_CF7_COUNTRY_SELECT_PRO ) : ?>
-					<p class="description"><?php echo esc_html__( 'A saved list restricts the field to that list. It combines with preferred/include/exclude.', 'oliforge-cf7-country-select' ); ?></p>
-				<?php endif; ?>
 			</fieldset>
 
 			<fieldset>
@@ -204,7 +195,7 @@ final class OliForge_CF7_Country_Select {
 		$include    = self::parse_country_option( $tag->get_option( 'include', '', true ) );
 		$exclude    = self::parse_country_option( $tag->get_option( 'exclude', '', true ) );
 		$preferred  = self::parse_country_option( $tag->get_option( 'preferred', '', true ) );
-		$list_codes = OLIFORGE_CF7_COUNTRY_SELECT_PRO ? self::get_country_list_codes( $tag->get_option( 'list', '', true ) ) : array();
+		$list_codes = self::sanitize_country_codes( apply_filters( 'oliforge_country_select_list_codes', array(), $tag->get_option( 'list', '', true ), $tag ) );
 
 		if ( $include ) {
 			$countries = array_intersect_key( $countries, array_flip( $include ) );
@@ -306,7 +297,7 @@ final class OliForge_CF7_Country_Select {
 		$allowed     = self::get_allowed_countries( 'en' );
 		$include     = self::parse_country_option( $tag->get_option( 'include', '', true ) );
 		$exclude     = self::parse_country_option( $tag->get_option( 'exclude', '', true ) );
-		$list_codes  = OLIFORGE_CF7_COUNTRY_SELECT_PRO ? self::get_country_list_codes( $tag->get_option( 'list', '', true ) ) : array();
+		$list_codes  = self::sanitize_country_codes( apply_filters( 'oliforge_country_select_list_codes', array(), $tag->get_option( 'list', '', true ), $tag ) );
 		if ( $include ) {
 			$allowed = array_intersect_key( $allowed, array_flip( $include ) );
 		}
@@ -396,9 +387,7 @@ final class OliForge_CF7_Country_Select {
 			)
 		);
 
-		// Country lists are intentionally NOT registered here: each list is saved
-		// independently via its own admin-post form/button (see handle_manage_list()),
-		// so one list's save cannot silently overwrite or drop the others.
+		// Add-ons may attach independent settings/UI through the public extension hooks.
 	}
 
 	public static function sanitize_allowed_countries( $value ): array {
@@ -425,126 +414,6 @@ final class OliForge_CF7_Country_Select {
 		return '1' === (string) $value ? '1' : '0';
 	}
 
-	/**
-	 * Normalizes a slug => {label, countries[]} map: drops entries with an
-	 * invalid slug, unknown country codes, or no countries left at all.
-	 *
-	 * @return array<string, array{label: string, countries: string[]}>
-	 */
-	public static function sanitize_country_lists( $value ): array {
-		if ( ! is_array( $value ) ) {
-			return array();
-		}
-
-		$clean = array();
-		foreach ( $value as $key => $list ) {
-			$slug = sanitize_title( is_string( $key ) ? $key : '' );
-			if ( '' === $slug || ! is_array( $list ) ) {
-				continue;
-			}
-
-			$codes = array();
-			foreach ( (array) ( $list['countries'] ?? array() ) as $code ) {
-				$code = self::normalize_country_code( is_string( $code ) ? $code : '' );
-				if ( '' !== $code && isset( self::$countries[ $code ] ) ) {
-					$codes[] = $code;
-				}
-			}
-			$codes = array_values( array_unique( $codes ) );
-			if ( ! $codes ) {
-				continue;
-			}
-
-			$label = isset( $list['label'] ) && is_string( $list['label'] ) ? sanitize_text_field( $list['label'] ) : '';
-
-			$clean[ $slug ] = array(
-				'label'     => '' !== $label ? $label : $slug,
-				'countries' => $codes,
-			);
-		}
-		return $clean;
-	}
-
-	/**
-	 * Handles the per-list "Save changes" / "Delete list" buttons. Each
-	 * country list posts to this admin-post action independently, so saving
-	 * or deleting one list never touches any other list or setting.
-	 */
-	public static function handle_manage_list(): void {
-		if ( ! OLIFORGE_CF7_COUNTRY_SELECT_PRO ) {
-			wp_die( esc_html__( 'Saved country lists are available in OliForge Country Select Pro.', 'oliforge-cf7-country-select' ), 403 );
-		}
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to manage country lists.', 'oliforge-cf7-country-select' ), 403 );
-		}
-		check_admin_referer( 'oliforge_cf7_country_select_manage_list' );
-
-		$lists         = self::get_country_lists();
-		$existing_slug = isset( $_POST['existing_slug'] ) ? sanitize_title( wp_unslash( $_POST['existing_slug'] ) ) : '';
-		$action        = isset( $_POST['oliforge_action'] ) ? sanitize_key( wp_unslash( $_POST['oliforge_action'] ) ) : 'save';
-		$notice        = 'error';
-
-		if ( 'delete' === $action ) {
-			if ( '' !== $existing_slug && isset( $lists[ $existing_slug ] ) ) {
-				unset( $lists[ $existing_slug ] );
-				$notice = 'deleted';
-			}
-		} else {
-			$slug = isset( $_POST['slug'] ) && is_string( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
-			if ( '' === $slug ) {
-				$slug = $existing_slug;
-			}
-
-			if ( '' !== $slug ) {
-				$codes            = array();
-				$posted_countries = isset( $_POST['countries'] )
-					? array_map( 'sanitize_text_field', wp_unslash( (array) $_POST['countries'] ) )
-					: array();
-				foreach ( $posted_countries as $code ) {
-					$code = self::normalize_country_code( is_string( $code ) ? $code : '' );
-					if ( '' !== $code && isset( self::$countries[ $code ] ) ) {
-						$codes[] = $code;
-					}
-				}
-				$codes = array_values( array_unique( $codes ) );
-
-				if ( isset( $lists[ $slug ] ) && $slug !== $existing_slug ) {
-					// Another list already owns this slug — refuse to silently overwrite it.
-					$notice = 'duplicate';
-				} elseif ( $codes ) {
-					$label = isset( $_POST['label'] ) && is_string( $_POST['label'] ) ? sanitize_text_field( wp_unslash( $_POST['label'] ) ) : '';
-					// Slug was renamed: drop the old entry so it doesn't linger alongside the new one.
-					if ( '' !== $existing_slug && $existing_slug !== $slug ) {
-						unset( $lists[ $existing_slug ] );
-					}
-					$lists[ $slug ] = array(
-						'label'     => '' !== $label ? $label : $slug,
-						'countries' => $codes,
-					);
-					$notice = 'saved';
-				} elseif ( '' !== $existing_slug ) {
-					// Saved with every country unchecked: nothing meaningful left to keep.
-					unset( $lists[ $existing_slug ] );
-					$notice = 'empty';
-				}
-			}
-		}
-
-		update_option( self::OPTION_COUNTRY_LISTS, self::sanitize_country_lists( $lists ) );
-
-		wp_safe_redirect(
-			esc_url_raw(
-				add_query_arg(
-					array(
-						'page'                 => 'oliforge-cf7-country-select',
-						'oliforge_list_notice' => $notice,
-					),
-					admin_url( 'options-general.php' )
-				) . '#oliforge-country-lists'
-			)
-		);
-		exit;
-	}
 
 	public static function enqueue_admin_assets( string $hook_suffix ): void {
 		if ( 'settings_page_oliforge-cf7-country-select' !== $hook_suffix ) {
@@ -611,7 +480,7 @@ final class OliForge_CF7_Country_Select {
 	 * @param string[]             $selected   Pre-checked codes.
 	 * @param string               $picker_id  Unique id, only used for debugging/data attributes.
 	 */
-	private static function render_country_picker( string $field_name, array $countries, array $selected, string $picker_id ): void {
+	public static function render_country_picker( string $field_name, array $countries, array $selected, string $picker_id ): void {
 		$order = 0;
 		?>
 		<div class="oliforge-country-picker" data-oliforge-picker="<?php echo esc_attr( $picker_id ); ?>">
@@ -683,7 +552,6 @@ final class OliForge_CF7_Country_Select {
 		$validation_border = self::sanitize_validation_border( get_option( self::OPTION_VALIDATION_BORDER, '0' ) );
 		$preview_language = self::resolve_language( $language_setting );
 		$preview_countries = self::get_translated_countries( $preview_language );
-		$country_lists     = OLIFORGE_CF7_COUNTRY_SELECT_PRO ? self::get_country_lists() : array();
 		?>
 		<div class="wrap oliforge-country-settings">
 			<div class="oliforge-header">
@@ -733,87 +601,12 @@ final class OliForge_CF7_Country_Select {
 				<?php submit_button(); ?>
 			</form>
 
-			<?php if ( OLIFORGE_CF7_COUNTRY_SELECT_PRO ) : ?>
-			<h2 id="oliforge-country-lists" class="oliforge-section-title"><?php echo esc_html__( 'Country lists', 'oliforge-cf7-country-select' ); ?></h2>
-			<p class="oliforge-lede"><?php echo esc_html__( 'Save named subsets of countries and use them in any field with list:slug, e.g. [country_select* country list:eu]. Each list has its own Save button and is saved independently of the other lists and settings above.', 'oliforge-cf7-country-select' ); ?></p>
 
-			<?php self::render_list_notice(); ?>
-
-			<?php foreach ( $country_lists as $slug => $list ) : ?>
-				<details class="oliforge-country-list-block">
-					<summary>
-						<code>list:<?php echo esc_html( $slug ); ?></code>
-						— <?php echo esc_html( $list['label'] ); ?>
-						(<?php echo esc_html( (string) count( $list['countries'] ) ); ?> <?php echo esc_html__( 'countries', 'oliforge-cf7-country-select' ); ?>)
-					</summary>
-					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-						<?php wp_nonce_field( 'oliforge_cf7_country_select_manage_list' ); ?>
-						<input type="hidden" name="action" value="oliforge_cf7_country_select_manage_list">
-						<input type="hidden" name="existing_slug" value="<?php echo esc_attr( $slug ); ?>">
-						<input type="hidden" name="slug" value="<?php echo esc_attr( $slug ); ?>">
-						<p>
-							<label>
-								<?php echo esc_html__( 'List name', 'oliforge-cf7-country-select' ); ?><br>
-								<input type="text" class="regular-text" name="label" value="<?php echo esc_attr( $list['label'] ); ?>">
-							</label>
-						</p>
-						<?php self::render_country_picker( 'countries', $preview_countries, $list['countries'], 'list-' . $slug ); ?>
-						<p class="oliforge-country-list-block__actions">
-							<button type="submit" name="oliforge_action" value="save" class="button button-primary"><?php echo esc_html__( 'Save changes', 'oliforge-cf7-country-select' ); ?></button>
-							<button type="submit" name="oliforge_action" value="delete" class="button button-link-delete" data-oliforge-confirm="<?php echo esc_attr__( 'Delete this country list? This cannot be undone.', 'oliforge-cf7-country-select' ); ?>"><?php echo esc_html__( 'Delete list', 'oliforge-cf7-country-select' ); ?></button>
-						</p>
-					</form>
-				</details>
-			<?php endforeach; ?>
-
-			<details class="oliforge-country-list-block oliforge-country-list-block--new">
-				<summary><?php echo esc_html__( '+ Add a new list', 'oliforge-cf7-country-select' ); ?></summary>
-				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-					<?php wp_nonce_field( 'oliforge_cf7_country_select_manage_list' ); ?>
-					<input type="hidden" name="action" value="oliforge_cf7_country_select_manage_list">
-					<input type="hidden" name="existing_slug" value="">
-					<p>
-						<label>
-							<?php echo esc_html__( 'Slug (used as list:slug in the form-tag)', 'oliforge-cf7-country-select' ); ?><br>
-							<input type="text" class="regular-text" name="slug" placeholder="eu" pattern="[A-Za-z0-9\-]*" required data-oliforge-existing-slugs="<?php echo esc_attr( implode( ',', array_keys( $country_lists ) ) ); ?>" data-oliforge-duplicate-message="<?php echo esc_attr__( 'That slug is already used by another list — choose a different one.', 'oliforge-cf7-country-select' ); ?>">
-						</label>
-						&nbsp;&nbsp;
-						<label>
-							<?php echo esc_html__( 'List name', 'oliforge-cf7-country-select' ); ?><br>
-							<input type="text" class="regular-text" name="label" placeholder="EU countries">
-						</label>
-					</p>
-					<?php self::render_country_picker( 'countries', $preview_countries, array(), 'list-new' ); ?>
-					<p class="oliforge-country-list-block__actions">
-						<button type="submit" name="oliforge_action" value="save" class="button button-primary"><?php echo esc_html__( 'Create list', 'oliforge-cf7-country-select' ); ?></button>
-					</p>
-				</form>
-			</details>
-			<?php endif; ?>
+			<?php do_action( 'oliforge_country_select_settings_after_core', $preview_countries ); ?>
 		</div>
 		<?php
 	}
 
-	private static function render_list_notice(): void {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only, only selects which notice text to display.
-		$notice = isset( $_GET['oliforge_list_notice'] ) ? sanitize_key( wp_unslash( $_GET['oliforge_list_notice'] ) ) : '';
-		$messages = array(
-			'saved'   => array( 'success', __( 'Country list saved.', 'oliforge-cf7-country-select' ) ),
-			'deleted' => array( 'success', __( 'Country list deleted.', 'oliforge-cf7-country-select' ) ),
-			'empty'     => array( 'warning', __( 'No countries were selected, so the list was removed.', 'oliforge-cf7-country-select' ) ),
-			'error'     => array( 'error', __( 'Could not save the list — please provide a slug.', 'oliforge-cf7-country-select' ) ),
-			'duplicate' => array( 'error', __( 'That slug is already used by another list — choose a different one.', 'oliforge-cf7-country-select' ) ),
-		);
-		if ( ! isset( $messages[ $notice ] ) ) {
-			return;
-		}
-		list( $type, $text ) = $messages[ $notice ];
-		printf(
-			'<div class="notice notice-%1$s is-dismissible oliforge-toast-notice"><p>%2$s</p></div>',
-			esc_attr( $type ),
-			esc_html( $text )
-		);
-	}
 
 	/** Translate one ISO alpha-2 country code to a supported display language. */
 	public static function translate_country_name( string $code, string $language = 'auto' ): string {
@@ -869,19 +662,26 @@ final class OliForge_CF7_Country_Select {
 		return self::sanitize_allowed_country_map( $allowed );
 	}
 
-	/** @return array<string, array{label: string, countries: string[]}> */
-	private static function get_country_lists(): array {
-		return self::sanitize_country_lists( get_option( self::OPTION_COUNTRY_LISTS, array() ) );
-	}
 
-	/** Resolves a saved list slug (e.g. from list:eu) to its ISO alpha-2 codes. */
-	private static function get_country_list_codes( $slug ): array {
-		$slug = is_string( $slug ) ? sanitize_title( wp_unslash( $slug ) ) : '';
-		if ( '' === $slug ) {
+
+	/**
+	 * Sanitizes an extension-provided set of ISO alpha-2 country codes.
+	 *
+	 * @param mixed $codes Candidate country codes.
+	 * @return string[]
+	 */
+	public static function sanitize_country_codes( $codes ): array {
+		if ( ! is_array( $codes ) ) {
 			return array();
 		}
-		$lists = self::get_country_lists();
-		return $lists[ $slug ]['countries'] ?? array();
+		$clean = array();
+		foreach ( $codes as $code ) {
+			$code = self::normalize_country_code( is_string( $code ) ? $code : '' );
+			if ( '' !== $code && isset( self::$countries[ $code ] ) ) {
+				$clean[] = $code;
+			}
+		}
+		return array_values( array_unique( $clean ) );
 	}
 
 	/** @return array<string, string> */
