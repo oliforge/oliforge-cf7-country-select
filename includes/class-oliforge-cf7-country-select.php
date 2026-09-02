@@ -39,6 +39,7 @@ final class OliForge_CF7_Country_Select {
 		add_filter( 'wpcf7_mail_tag_replaced_country_select', array( __CLASS__, 'replace_mail_tag_with_country_name' ), 10, 4 );
 		add_filter( 'wpcf7_mail_tag_replaced_country_select*', array( __CLASS__, 'replace_mail_tag_with_country_name' ), 10, 4 );
 		add_filter( 'wpcf7_posted_data', array( __CLASS__, 'inject_country_names_into_posted_data' ) );
+		add_filter( 'cfdb7_before_save_data', array( __CLASS__, 'format_country_for_cfdb7' ) );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'register_settings_page' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
@@ -344,6 +345,62 @@ final class OliForge_CF7_Country_Select {
 		$label = sprintf( '%1$s (%2$s)', $name, $code );
 
 		return $html ? esc_html( $label ) : $label;
+	}
+
+	/**
+	 * CFDB7 (Contact Form CFDB7) saves its own copy of each submission's
+	 * posted data into a separate table. Everywhere else — $_POST, other
+	 * mail-tags, webhooks, CRM integrations — the canonical value stays the
+	 * plain ISO alpha-2 code (see validate()). Here, and only here, we swap
+	 * it for "Name (CODE)" so the Contact Forms admin list stays readable.
+	 * This only affects submissions saved from this point on; existing rows
+	 * already stored by CFDB7 are left untouched.
+	 */
+	public static function format_country_for_cfdb7( $form_data ) {
+		if ( ! is_array( $form_data ) ) {
+			return $form_data;
+		}
+
+		$submission   = WPCF7_Submission::get_instance();
+		$contact_form = $submission ? $submission->get_contact_form() : null;
+		if ( ! $contact_form ) {
+			return $form_data;
+		}
+
+		$tags = $contact_form->scan_form_tags( array( 'type' => array( 'country_select', 'country_select*' ) ) );
+
+		foreach ( $tags as $tag ) {
+			$name = $tag->name;
+			if ( '' === $name || ! isset( $form_data[ $name ] ) ) {
+				continue;
+			}
+
+			// The tag is registered with 'selectable-values' => true, so CF7 core
+			// wraps the posted value in an array in setup_posted_data() even
+			// though this is a single-value field. Unwrap it before use, and
+			// write back a plain string so CFDB7 (and its CSV export, search,
+			// etc.) never see a serialized array for this field.
+			$raw = $form_data[ $name ];
+			if ( is_array( $raw ) ) {
+				$raw = reset( $raw );
+			}
+			if ( ! is_string( $raw ) ) {
+				continue;
+			}
+
+			$code = self::normalize_country_code( $raw );
+			if ( '' === $code ) {
+				continue;
+			}
+
+			$language     = self::resolve_language( $tag->get_option( 'language', '', true ) );
+			$country_name = self::translate_country_name( $code, $language );
+			$form_data[ $name ] = ( '' !== $country_name )
+					? sprintf( '%1$s (%2$s)', $country_name, $code )
+					: $code;
+		}
+
+		return $form_data;
 	}
 
 	public static function register_settings_page(): void {
