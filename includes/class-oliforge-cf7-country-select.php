@@ -625,6 +625,14 @@ final class OliForge_CF7_Country_Select {
 					<span class="oliforge-badge oliforge-badge--version">v<?php echo esc_html( OLIFORGE_CF7_COUNTRY_SELECT_VERSION ); ?></span>
 				</div>
 			</div>
+			<?php
+			/*
+			 * Marks where the branded header ends, so WP core's admin-notice relocation
+			 * (wp-admin/js/common.js) inserts notices here instead of after the <h1> it
+			 * finds inside the header card, which would visually place them inside it.
+			 */
+			?>
+			<hr class="wp-header-end">
 			<p class="oliforge-lede"><?php echo esc_html__( 'Choose which countries are available in all Contact Form 7 country selectors. All countries are enabled by default.', 'oliforge-cf7-country-select' ); ?></p>
 			<form method="post" action="options.php" class="oliforge-card">
 				<?php settings_fields( 'oliforge_cf7_country_select_settings' ); ?>
