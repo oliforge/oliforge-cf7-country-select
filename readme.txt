@@ -5,7 +5,7 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
-Stable tag: 3.2.5
+Stable tag: 3.2.6
 License: GPLv2 or later
 
 Adds a searchable, multilingual country selector with local SVG flags and server-side validation to Contact Form 7.
@@ -116,6 +116,9 @@ The ISO 3166-1 alpha-2 code is submitted. Translation affects display only.
 Automatic mode falls back to English.
 
 == Changelog ==
+
+= 3.2.6 =
+* Reserved the "default" list slug to always mean the core allowed-countries list: a tag with no list: option, or list:default, now resolves to it directly instead of going through the Pro named-list filter at all — a Pro-saved list that happened to be named "default" could previously shadow it silently.
 
 = 3.2.5 =
 * Added `OliForge_CF7_Country_Select::get_allowed_country_codes( $tag )`, a public API for other plugins to validate a submitted value against exactly the same country set a given tag accepts (admin allowlist, per-tag include/exclude, and Pro named lists), without reimplementing that resolution themselves.

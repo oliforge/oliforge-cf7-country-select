@@ -746,6 +746,14 @@ final class OliForge_CF7_Country_Select {
 	}
 
 	/**
+	 * The reserved slug that always means "the core (Free) admin allowlist",
+	 * whether a tag has no list: option at all or spells it out explicitly
+	 * as list:default. Reserved so a Pro-side saved list that happens to be
+	 * named "default" can never silently shadow it.
+	 */
+	const DEFAULT_LIST_SLUG = 'default';
+
+	/**
 	 * Resolves the country map (code => name) that a given [country_select]
 	 * tag actually accepts: the admin's allowed-countries setting, narrowed
 	 * by the tag's own include/exclude options and by list: (the Pro add-on
@@ -758,10 +766,16 @@ final class OliForge_CF7_Country_Select {
 	 * @return array<string, string>
 	 */
 	private static function resolve_allowed_countries( $tag, string $language = 'en' ): array {
-		$countries  = self::get_allowed_countries( $language );
-		$include    = self::parse_country_option( $tag->get_option( 'include', '', true ) );
-		$exclude    = self::parse_country_option( $tag->get_option( 'exclude', '', true ) );
-		$list_codes = self::sanitize_country_codes( apply_filters( 'oliforge_country_select_list_codes', array(), $tag->get_option( 'list', '', true ), $tag ) );
+		$countries = self::get_allowed_countries( $language );
+		$include   = self::parse_country_option( $tag->get_option( 'include', '', true ) );
+		$exclude   = self::parse_country_option( $tag->get_option( 'exclude', '', true ) );
+		$slug      = sanitize_title( (string) $tag->get_option( 'list', '', true ) );
+
+		// No list: option, or list:default: always the core allowlist above,
+		// never routed through the named-list filter — see DEFAULT_LIST_SLUG.
+		$list_codes = ( '' === $slug || self::DEFAULT_LIST_SLUG === $slug )
+			? array()
+			: self::sanitize_country_codes( apply_filters( 'oliforge_country_select_list_codes', array(), $slug, $tag ) );
 
 		if ( $include ) {
 			$countries = array_intersect_key( $countries, array_flip( $include ) );
