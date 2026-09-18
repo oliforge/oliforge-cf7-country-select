@@ -193,21 +193,8 @@ final class OliForge_CF7_Country_Select {
 		$classes   = trim( $classes . ' ' . $extra_class );
 		$visible_classes = preg_replace( '/\b(?:oliforge-cf7-country-select__native|wpcf7-not-valid)\b/', '', $classes );
 		$visible_classes = trim( preg_replace( '/\s+/', ' ', (string) $visible_classes ) );
-		$countries  = self::get_allowed_countries( $language );
-		$include    = self::parse_country_option( $tag->get_option( 'include', '', true ) );
-		$exclude    = self::parse_country_option( $tag->get_option( 'exclude', '', true ) );
-		$preferred  = self::parse_country_option( $tag->get_option( 'preferred', '', true ) );
-		$list_codes = self::sanitize_country_codes( apply_filters( 'oliforge_country_select_list_codes', array(), $tag->get_option( 'list', '', true ), $tag ) );
-
-		if ( $include ) {
-			$countries = array_intersect_key( $countries, array_flip( $include ) );
-		}
-		if ( $exclude ) {
-			$countries = array_diff_key( $countries, array_flip( $exclude ) );
-		}
-		if ( $list_codes ) {
-			$countries = array_intersect_key( $countries, array_flip( $list_codes ) );
-		}
+		$countries = self::resolve_allowed_countries( $tag, $language );
+		$preferred = self::parse_country_option( $tag->get_option( 'preferred', '', true ) );
 		$preferred = array_values( array_intersect( $preferred, array_keys( $countries ) ) );
 
 		$selected = self::get_submitted_value( $name );
@@ -296,19 +283,7 @@ final class OliForge_CF7_Country_Select {
 		$raw_value   = $is_string ? sanitize_text_field( wp_unslash( $_POST[ $name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Contact Form 7 validates the form request.
 		$value       = self::normalize_country_code( $raw_value );
 		$raw_trimmed = trim( $raw_value );
-		$allowed     = self::get_allowed_countries( 'en' );
-		$include     = self::parse_country_option( $tag->get_option( 'include', '', true ) );
-		$exclude     = self::parse_country_option( $tag->get_option( 'exclude', '', true ) );
-		$list_codes  = self::sanitize_country_codes( apply_filters( 'oliforge_country_select_list_codes', array(), $tag->get_option( 'list', '', true ), $tag ) );
-		if ( $include ) {
-			$allowed = array_intersect_key( $allowed, array_flip( $include ) );
-		}
-		if ( $exclude ) {
-			$allowed = array_diff_key( $allowed, array_flip( $exclude ) );
-		}
-		if ( $list_codes ) {
-			$allowed = array_intersect_key( $allowed, array_flip( $list_codes ) );
-		}
+		$allowed     = self::resolve_allowed_countries( $tag );
 
 		if ( $is_present && ! $is_string ) {
 			$result->invalidate( $tag, __( 'Please select a valid country.', 'oliforge-cf7-country-select' ) );
@@ -768,6 +743,52 @@ final class OliForge_CF7_Country_Select {
 
 		$allowed = apply_filters( 'oliforge_country_select_allowed_countries', $allowed, $language );
 		return self::sanitize_allowed_country_map( $allowed );
+	}
+
+	/**
+	 * Resolves the country map (code => name) that a given [country_select]
+	 * tag actually accepts: the admin's allowed-countries setting, narrowed
+	 * by the tag's own include/exclude options and by list: (the Pro add-on
+	 * hooks named lists into the oliforge_country_select_list_codes filter).
+	 * Shared by render() (which needs the translated names) and validate()
+	 * and get_allowed_country_codes() (which only need the code set and
+	 * always resolve it in 'en', since the submitted value is always the
+	 * canonical ISO code regardless of display language).
+	 *
+	 * @return array<string, string>
+	 */
+	private static function resolve_allowed_countries( $tag, string $language = 'en' ): array {
+		$countries  = self::get_allowed_countries( $language );
+		$include    = self::parse_country_option( $tag->get_option( 'include', '', true ) );
+		$exclude    = self::parse_country_option( $tag->get_option( 'exclude', '', true ) );
+		$list_codes = self::sanitize_country_codes( apply_filters( 'oliforge_country_select_list_codes', array(), $tag->get_option( 'list', '', true ), $tag ) );
+
+		if ( $include ) {
+			$countries = array_intersect_key( $countries, array_flip( $include ) );
+		}
+		if ( $exclude ) {
+			$countries = array_diff_key( $countries, array_flip( $exclude ) );
+		}
+		if ( $list_codes ) {
+			$countries = array_intersect_key( $countries, array_flip( $list_codes ) );
+		}
+		return $countries;
+	}
+
+	/**
+	 * Public API for other plugins (e.g. OliForge CF7 Submission Guard) that
+	 * need to validate a submitted value against exactly the same set of
+	 * countries this tag itself accepts, without reimplementing the
+	 * language/allowed-countries/include/exclude/list resolution here.
+	 *
+	 * @param WPCF7_FormTag $tag A scanned [country_select] form tag.
+	 * @return string[] ISO alpha-2 codes currently valid for this tag.
+	 */
+	public static function get_allowed_country_codes( $tag ): array {
+		if ( ! is_object( $tag ) || ! method_exists( $tag, 'get_option' ) ) {
+			return array();
+		}
+		return array_keys( self::resolve_allowed_countries( $tag ) );
 	}
 
 

@@ -5,7 +5,7 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
-Stable tag: 3.2.4
+Stable tag: 3.2.5
 License: GPLv2 or later
 
 Adds a searchable, multilingual country selector with local SVG flags and server-side validation to Contact Form 7.
@@ -116,6 +116,10 @@ The ISO 3166-1 alpha-2 code is submitted. Translation affects display only.
 Automatic mode falls back to English.
 
 == Changelog ==
+
+= 3.2.5 =
+* Added `OliForge_CF7_Country_Select::get_allowed_country_codes( $tag )`, a public API for other plugins to validate a submitted value against exactly the same country set a given tag accepts (admin allowlist, per-tag include/exclude, and Pro named lists), without reimplementing that resolution themselves.
+* render() and validate() now share the same underlying resolver, so the dropdown's options and server-side validation can never drift apart.
 
 = 3.2.4 =
 * Added a translated country name alongside the submitted ISO code on wpcf7_posted_data, as "{field-name}_name", so webhooks, CRM connectors and custom mail hooks that read submitted data directly (outside the Mail template) can access the readable name without extra code.
