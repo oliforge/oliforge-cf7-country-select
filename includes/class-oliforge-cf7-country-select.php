@@ -44,6 +44,7 @@ final class OliForge_CF7_Country_Select {
 		add_action( 'admin_menu', array( __CLASS__, 'register_settings_page' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_assets' ) );
+		add_action( 'admin_notices', array( __CLASS__, 'render_unresolved_list_notice' ) );
 	}
 
 
@@ -193,7 +194,10 @@ final class OliForge_CF7_Country_Select {
 		$classes   = trim( $classes . ' ' . $extra_class );
 		$visible_classes = preg_replace( '/\b(?:oliforge-cf7-country-select__native|wpcf7-not-valid)\b/', '', $classes );
 		$visible_classes = trim( preg_replace( '/\s+/', ' ', (string) $visible_classes ) );
-		$countries = self::resolve_allowed_countries( $tag, $language );
+		// Unresolved list: (unknown/deleted slug, or Pro inactive) renders no
+		// country options at all — see resolve_country_context(). Never
+		// falls back to the default allowlist for an explicit list: option.
+		$countries = self::resolve_country_context( $tag, $language )['countries'];
 		$preferred = self::parse_country_option( $tag->get_option( 'preferred', '', true ) );
 		$preferred = array_values( array_intersect( $preferred, array_keys( $countries ) ) );
 
@@ -283,7 +287,10 @@ final class OliForge_CF7_Country_Select {
 		$raw_value   = $is_string ? sanitize_text_field( wp_unslash( $_POST[ $name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Contact Form 7 validates the form request.
 		$value       = self::normalize_country_code( $raw_value );
 		$raw_trimmed = trim( $raw_value );
-		$allowed     = self::resolve_allowed_countries( $tag );
+		// Unresolved list: yields an empty map, so any non-empty submission
+		// is rejected below — fails closed instead of falling back to the
+		// default allowlist.
+		$allowed     = self::resolve_country_context( $tag )['countries'];
 
 		if ( $is_present && ! $is_string ) {
 			$result->invalidate( $tag, __( 'Please select a valid country.', 'oliforge-cf7-country-select' ) );
@@ -754,37 +761,83 @@ final class OliForge_CF7_Country_Select {
 	const DEFAULT_LIST_SLUG = 'default';
 
 	/**
-	 * Resolves the country map (code => name) that a given [country_select]
-	 * tag actually accepts: the admin's allowed-countries setting, narrowed
-	 * by the tag's own include/exclude options and by list: (the Pro add-on
-	 * hooks named lists into the oliforge_country_select_list_codes filter).
-	 * Shared by render() (which needs the translated names) and validate()
-	 * and get_allowed_country_codes() (which only need the code set and
-	 * always resolve it in 'en', since the submitted value is always the
-	 * canonical ISO code regardless of display language).
+	 * Resolves everything a given [country_select] tag needs to know about
+	 * which countries it accepts.
 	 *
-	 * @return array<string, string>
+	 * - No list: option, or list:default: the admin's allowed-countries
+	 *   setting — the only case DEFAULT_LIST_SLUG applies to.
+	 * - Any other list:slug: resolved independently of the admin allowlist
+	 *   above via the oliforge_country_select_resolve_list filter (the Pro
+	 *   add-on hooks named lists into it), starting from the full country
+	 *   reference. A Pro list is a self-contained set, not narrowed by the
+	 *   Free allowlist.
+	 * - Either base list is then narrowed by the tag's own include/exclude
+	 *   options.
+	 *
+	 * If no add-on answers the filter (null — Pro inactive) or one answers
+	 * but doesn't recognize the slug (false — unknown/deleted list), the
+	 * tag fails closed: an empty country map, never a silent fallback to
+	 * the default allowlist. render() then shows no options and validate()
+	 * rejects any non-empty submission.
+	 *
+	 * Shared by render() (which needs the translated names, so takes
+	 * $language) and validate() and get_allowed_country_codes() (which only
+	 * need the code set and always resolve it in 'en', since the submitted
+	 * value is always the canonical ISO code regardless of display
+	 * language).
+	 *
+	 * @return array{resolved: bool, source: string, list_id: string, countries: array<string,string>, reason: string}
 	 */
-	private static function resolve_allowed_countries( $tag, string $language = 'en' ): array {
-		$countries = self::get_allowed_countries( $language );
-		$include   = self::parse_country_option( $tag->get_option( 'include', '', true ) );
-		$exclude   = self::parse_country_option( $tag->get_option( 'exclude', '', true ) );
-		$slug      = sanitize_title( (string) $tag->get_option( 'list', '', true ) );
+	private static function resolve_country_context( $tag, string $language = 'en' ): array {
+		$include = self::parse_country_option( $tag->get_option( 'include', '', true ) );
+		$exclude = self::parse_country_option( $tag->get_option( 'exclude', '', true ) );
+		$slug    = sanitize_title( (string) $tag->get_option( 'list', '', true ) );
 
-		// No list: option, or list:default: always the core allowlist above,
-		// never routed through the named-list filter — see DEFAULT_LIST_SLUG.
-		$list_codes = ( '' === $slug || self::DEFAULT_LIST_SLUG === $slug )
-			? array()
-			: self::sanitize_country_codes( apply_filters( 'oliforge_country_select_list_codes', array(), $slug, $tag ) );
+		if ( '' === $slug || self::DEFAULT_LIST_SLUG === $slug ) {
+			$countries = self::apply_include_exclude( self::get_allowed_countries( $language ), $include, $exclude );
+			return array(
+				'resolved'  => true,
+				'source'    => 'default',
+				'list_id'   => self::DEFAULT_LIST_SLUG,
+				'countries' => $countries,
+				'reason'    => '',
+			);
+		}
 
+		$result = apply_filters( 'oliforge_country_select_resolve_list', null, $slug, $tag );
+
+		if ( ! is_array( $result ) ) {
+			return array(
+				'resolved'  => false,
+				'source'    => 'pro_list',
+				'list_id'   => $slug,
+				'countries' => array(),
+				'reason'    => null === $result ? 'no_provider' : 'list_not_found',
+			);
+		}
+
+		$codes     = self::sanitize_country_codes( $result );
+		$countries = array_intersect_key( self::get_translated_countries( $language ), array_flip( $codes ) );
+		$countries = apply_filters( 'oliforge_country_select_allowed_countries', $countries, $language );
+		$countries = self::sanitize_allowed_country_map( $countries );
+		$countries = self::apply_include_exclude( $countries, $include, $exclude );
+
+		return array(
+			'resolved'  => true,
+			'source'    => 'pro_list',
+			'list_id'   => $slug,
+			'countries' => $countries,
+			'reason'    => '',
+		);
+	}
+
+	/** @param string[] $include @param string[] $exclude @return array<string,string> */
+	private static function apply_include_exclude( array $countries, array $include, array $exclude ): array {
 		if ( $include ) {
 			$countries = array_intersect_key( $countries, array_flip( $include ) );
 		}
 		if ( $exclude ) {
 			$countries = array_diff_key( $countries, array_flip( $exclude ) );
-		}
-		if ( $list_codes ) {
-			$countries = array_intersect_key( $countries, array_flip( $list_codes ) );
 		}
 		return $countries;
 	}
@@ -802,7 +855,102 @@ final class OliForge_CF7_Country_Select {
 		if ( ! is_object( $tag ) || ! method_exists( $tag, 'get_option' ) ) {
 			return array();
 		}
-		return array_keys( self::resolve_allowed_countries( $tag ) );
+		return array_keys( self::resolve_country_context( $tag )['countries'] );
+	}
+
+	/**
+	 * Structured counterpart to get_allowed_country_codes(): distinguishes
+	 * "this list:slug can't be resolved right now" (resolved => false) from
+	 * "this list legitimately allows zero countries" (resolved => true,
+	 * countries => array()) — both look identical to the codes-only API
+	 * above, but only the first is a misconfiguration worth a caller
+	 * surfacing to an admin.
+	 *
+	 * @param WPCF7_FormTag $tag A scanned [country_select] form tag.
+	 * @return array{resolved: bool, source: string, list_id: string, countries: string[], reason: string}
+	 */
+	public static function get_country_context( $tag ): array {
+		if ( ! is_object( $tag ) || ! method_exists( $tag, 'get_option' ) ) {
+			return array(
+				'resolved'  => false,
+				'source'    => 'default',
+				'list_id'   => self::DEFAULT_LIST_SLUG,
+				'countries' => array(),
+				'reason'    => 'invalid_tag',
+			);
+		}
+		$context = self::resolve_country_context( $tag );
+		$context['countries'] = array_keys( $context['countries'] );
+		return $context;
+	}
+
+	/**
+	 * Live-scans every Contact Form 7 form for [country_select] fields
+	 * whose list: slug currently fails to resolve (unknown, deleted, or
+	 * Pro inactive) — the fail-closed cases in resolve_country_context().
+	 * Recomputed on demand rather than cached, so it can never go stale.
+	 *
+	 * @return array<int, array{form_title: string, field: string, slug: string}>
+	 */
+	private static function find_unresolved_lists(): array {
+		if ( ! class_exists( 'WPCF7_ContactForm' ) || ! method_exists( 'WPCF7_ContactForm', 'find' ) ) {
+			return array();
+		}
+		$problems = array();
+		foreach ( (array) WPCF7_ContactForm::find( array( 'posts_per_page' => -1 ) ) as $form ) {
+			if ( ! is_object( $form ) || ! method_exists( $form, 'scan_form_tags' ) ) {
+				continue;
+			}
+			foreach ( (array) $form->scan_form_tags( array( 'basetype' => array( 'country_select' ) ) ) as $tag ) {
+				$context = self::resolve_country_context( $tag );
+				if ( ! $context['resolved'] ) {
+					$problems[] = array(
+						'form_title' => method_exists( $form, 'title' ) ? (string) $form->title() : '',
+						'field'      => isset( $tag->name ) ? (string) $tag->name : '',
+						'slug'       => $context['list_id'],
+					);
+				}
+			}
+		}
+		return $problems;
+	}
+
+	/**
+	 * Admin-facing warning for the fail-closed case above: shown on Contact
+	 * Form 7's own admin screens and this plugin's settings page, never on
+	 * the front end (a broken list: config shouldn't be described to site
+	 * visitors — they just see an empty selector).
+	 */
+	public static function render_unresolved_list_notice(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		global $pagenow;
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		$screen_id = $screen ? (string) $screen->id : '';
+		$is_relevant = false !== strpos( $screen_id, 'wpcf7' )
+			|| ( 'options-general.php' === $pagenow && isset( $_GET['page'] ) && 'oliforge-cf7-country-select' === $_GET['page'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! $is_relevant ) {
+			return;
+		}
+
+		$problems = self::find_unresolved_lists();
+		if ( ! $problems ) {
+			return;
+		}
+
+		echo '<div class="notice notice-warning"><p><strong>' . esc_html__( 'OliForge Country Select:', 'oliforge-cf7-country-select' ) . '</strong> '
+			. esc_html__( 'These fields reference a list: slug that can\'t be resolved right now, so they currently accept no valid country until fixed:', 'oliforge-cf7-country-select' )
+			. '</p><ul style="list-style:disc;margin-left:1.5em;">';
+		foreach ( $problems as $problem ) {
+			printf(
+				'<li>%1$s — <code>%2$s</code> (<code>list:%3$s</code>)</li>',
+				esc_html( $problem['form_title'] ),
+				esc_html( $problem['field'] ),
+				esc_html( $problem['slug'] )
+			);
+		}
+		echo '</ul></div>';
 	}
 
 

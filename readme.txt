@@ -5,7 +5,7 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
-Stable tag: 3.2.6
+Stable tag: 3.2.7
 License: GPLv2 or later
 
 Adds a searchable, multilingual country selector with local SVG flags and server-side validation to Contact Form 7.
@@ -116,6 +116,13 @@ The ISO 3166-1 alpha-2 code is submitted. Translation affects display only.
 Automatic mode falls back to English.
 
 == Changelog ==
+
+= 3.2.7 =
+* Fail closed on an unresolvable list: slug (unknown, deleted, or Pro inactive): the field now renders with no country options and rejects any submitted value, instead of silently falling back to the default allowed-countries list. Previously a typo like list:europee, or deleting a list still referenced by a form, quietly opened the field back up to every allowed country.
+* A named list:slug is now resolved independently of the default allowed-countries list instead of being intersected with it — a Pro list is a self-contained set of countries, narrowed only by the tag's own include/exclude options.
+* Replaced the internal `oliforge_country_select_list_codes` filter with `oliforge_country_select_resolve_list`, which can distinguish "no list provider" (null) from "slug not found" (false) from "list found" (an array of codes) — required to make fail-closed possible. Requires OliForge Country Select Pro 1.0.2 or newer.
+* Added `OliForge_CF7_Country_Select::get_country_context( $tag )`, a structured counterpart to `get_allowed_country_codes()` for callers that need to tell a misconfigured list apart from one that legitimately allows zero countries.
+* Added an admin notice on Contact Form 7's screens and this plugin's settings page listing any field whose list: slug currently fails to resolve.
 
 = 3.2.6 =
 * Reserved the "default" list slug to always mean the core allowed-countries list: a tag with no list: option, or list:default, now resolves to it directly instead of going through the Pro named-list filter at all — a Pro-saved list that happened to be named "default" could previously shadow it silently.
