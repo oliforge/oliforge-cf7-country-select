@@ -32,6 +32,8 @@ Features:
 * Placeholder can be selected again to clear the field; required fields then fail validation correctly.
 * Mail-tag output shows the full translated country name with its ISO code, e.g. Ukraine (UA); submitted values used by integrations remain the plain ISO code.
 
+Credits: the bundled SVG country flags come from the flag-icons project (https://github.com/lipis/flag-icons) by Panayiotis Lipiridis, licensed under the MIT License. The license text is included in the plugin as LICENSE-FLAG-ICONS.
+
 == Installation ==
 1. Install and activate Contact Form 7.
 2. Upload and activate this plugin.
