@@ -5,7 +5,7 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
-Stable tag: 3.2.7
+Stable tag: 3.2.8
 License: GPLv2 or later
 
 Adds a searchable, multilingual country selector with local SVG flags and server-side validation to Contact Form 7.
@@ -116,6 +116,9 @@ The ISO 3166-1 alpha-2 code is submitted. Translation affects display only.
 Automatic mode falls back to English.
 
 == Changelog ==
+
+= 3.2.8 =
+* Added translations: the plugin now loads its own text domain, with bundled German, Spanish, French, Russian and Ukrainian admin translations and a .pot template.
 
 = 3.2.7 =
 * Fail closed on an unresolvable list: slug (unknown, deleted, or Pro inactive): the field now renders with no country options and rejects any submitted value, instead of silently falling back to the default allowed-countries list. Previously a typo like list:europee, or deleting a list still referenced by a form, quietly opened the field back up to every allowed country.

@@ -1,0 +1,227 @@
+# Spanish translation for OliForge Country Select.
+# Copyright (C) 2026 OliForge™
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: OliForge Country Select 3.2.8\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-10-13 12:00+00:00\n"
+"Last-Translator: OliForge\n"
+"Language-Team: Spanish\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: oliforge-cf7-country-select\n"
+
+#: oliforge-cf7-country-select.php
+msgid "Adds an accessible, searchable and multilingual country selector with locally bundled SVG flags, administrator-controlled country availability, automatic locale detection and developer filters to Contact Form 7. Part of the OliForge™ plugin suite."
+msgstr "Añade a Contact Form 7 un selector de países accesible, con búsqueda y multilingüe, con banderas SVG incluidas localmente, disponibilidad de países controlada por el administrador, detección automática del idioma y filtros para desarrolladores. Parte de la suite de plugins OliForge™."
+
+#: includes/class-oliforge-cf7-country-select.php:59
+#: includes/class-oliforge-cf7-country-select.php:606
+msgid "Country Select"
+msgstr "Selector de países"
+
+#: includes/class-oliforge-cf7-country-select.php:73
+#: includes/class-oliforge-cf7-country-select.php:390
+#: includes/class-oliforge-cf7-country-select.php:391
+msgid "OliForge Country Select"
+msgstr "OliForge Selector de países"
+
+#: includes/class-oliforge-cf7-country-select.php:74
+msgid "Generate a searchable country selector with local flags, translations, filtering and Contact Form 7 validation."
+msgstr "Genere un selector de países con búsqueda, banderas locales, traducciones, filtrado y validación de Contact Form 7."
+
+#: includes/class-oliforge-cf7-country-select.php:80
+msgid "Field type"
+msgstr "Tipo de campo"
+
+#: includes/class-oliforge-cf7-country-select.php:81
+msgid "Required field"
+msgstr "Campo obligatorio"
+
+#: includes/class-oliforge-cf7-country-select.php:85
+msgid "Field name"
+msgstr "Nombre del campo"
+
+#: includes/class-oliforge-cf7-country-select.php:90
+msgid "Placeholder"
+msgstr "Marcador de posición"
+
+#: includes/class-oliforge-cf7-country-select.php:91
+#: includes/class-oliforge-cf7-country-select.php:191
+msgid "Select a country"
+msgstr "Seleccione un país"
+
+#: includes/class-oliforge-cf7-country-select.php:96
+msgid "Language"
+msgstr "Idioma"
+
+#: includes/class-oliforge-cf7-country-select.php:98
+msgid "Use plugin setting"
+msgstr "Usar el ajuste del plugin"
+
+#: includes/class-oliforge-cf7-country-select.php:105
+msgid "Country lists"
+msgstr "Listas de países"
+
+#: includes/class-oliforge-cf7-country-select.php:107
+msgid "Preferred ISO codes"
+msgstr "Códigos ISO preferidos"
+
+#: includes/class-oliforge-cf7-country-select.php:108
+msgid "Include only"
+msgstr "Incluir solo"
+
+#: includes/class-oliforge-cf7-country-select.php:109
+msgid "Exclude"
+msgstr "Excluir"
+
+#: includes/class-oliforge-cf7-country-select.php:113
+msgid "Default and browser integration"
+msgstr "Valor predeterminado e integración con el navegador"
+
+#: includes/class-oliforge-cf7-country-select.php:114
+msgid "Default country"
+msgstr "País predeterminado"
+
+#: includes/class-oliforge-cf7-country-select.php:115
+msgid "Autocomplete"
+msgstr "Autocompletado"
+
+#: includes/class-oliforge-cf7-country-select.php:116
+msgid "Tab index"
+msgstr "Índice de tabulación"
+
+#: includes/class-oliforge-cf7-country-select.php:120
+msgid "Interface"
+msgstr "Interfaz"
+
+#: includes/class-oliforge-cf7-country-select.php:121
+msgid "Disable search"
+msgstr "Desactivar la búsqueda"
+
+#: includes/class-oliforge-cf7-country-select.php:122
+msgid "Hide flags"
+msgstr "Ocultar banderas"
+
+#: includes/class-oliforge-cf7-country-select.php:123
+msgid "Hide chevron"
+msgstr "Ocultar la flecha"
+
+#: includes/class-oliforge-cf7-country-select.php:127
+msgid "ID attribute"
+msgstr "Atributo ID"
+
+#: includes/class-oliforge-cf7-country-select.php:131
+msgid "Class attribute"
+msgstr "Atributo de clase"
+
+#: includes/class-oliforge-cf7-country-select.php:137
+msgid "Generated form-tag"
+msgstr "Form-tag generado"
+
+#: includes/class-oliforge-cf7-country-select.php:138
+msgid "Insert Tag"
+msgstr "Insertar etiqueta"
+
+#: includes/class-oliforge-cf7-country-select.php:140
+msgid "Use this mail-tag in the Mail tab:"
+msgstr "Use esta mail-tag en la pestaña Correo:"
+
+#: includes/class-oliforge-cf7-country-select.php:228
+msgid "Search country"
+msgstr "Buscar país"
+
+#: includes/class-oliforge-cf7-country-select.php:229
+msgid "No countries found"
+msgstr "No se encontraron países"
+
+#: includes/class-oliforge-cf7-country-select.php:296
+#: includes/class-oliforge-cf7-country-select.php:300
+msgid "Please select a valid country."
+msgstr "Seleccione un país válido."
+
+#: includes/class-oliforge-cf7-country-select.php:492
+#: includes/class-oliforge-cf7-country-select.php:533
+msgid "Search countries"
+msgstr "Buscar países"
+
+#: includes/class-oliforge-cf7-country-select.php:493
+msgid "Select all"
+msgstr "Seleccionar todo"
+
+#: includes/class-oliforge-cf7-country-select.php:494
+msgid "Clear all"
+msgstr "Borrar todo"
+
+#: includes/class-oliforge-cf7-country-select.php:530
+msgid "All countries"
+msgstr "Todos los países"
+
+#: includes/class-oliforge-cf7-country-select.php:545
+msgid "Add all"
+msgstr "Añadir todos"
+
+#: includes/class-oliforge-cf7-country-select.php:549
+msgid "Selected countries"
+msgstr "Países seleccionados"
+
+#: includes/class-oliforge-cf7-country-select.php:552
+msgid "Search selected"
+msgstr "Buscar en seleccionados"
+
+#: includes/class-oliforge-cf7-country-select.php:565
+msgid "Remove all"
+msgstr "Quitar todos"
+
+#: includes/class-oliforge-cf7-country-select.php:602
+msgid "Engineering without complexity."
+msgstr "Ingeniería sin complicaciones."
+
+#: includes/class-oliforge-cf7-country-select.php:606
+#: oliforge-cf7-country-select.php:23
+msgid "Settings"
+msgstr "Ajustes"
+
+#: includes/class-oliforge-cf7-country-select.php:618
+msgid "Choose which countries are available in all Contact Form 7 country selectors. All countries are enabled by default."
+msgstr "Elija qué países están disponibles en todos los selectores de países de Contact Form 7. De forma predeterminada, todos los países están activados."
+
+#: includes/class-oliforge-cf7-country-select.php:623
+msgid "Country name language"
+msgstr "Idioma de los nombres de países"
+
+#: includes/class-oliforge-cf7-country-select.php:626
+msgid "Automatic — use the current WordPress locale"
+msgstr "Automático: usar el idioma actual de WordPress"
+
+#: includes/class-oliforge-cf7-country-select.php:634
+msgid "A form tag can override this setting with language:en, language:de, language:es, language:fr, language:uk, or language:ru."
+msgstr "Una form-tag puede anular este ajuste con language:en, language:de, language:es, language:fr, language:uk o language:ru."
+
+#: includes/class-oliforge-cf7-country-select.php:638
+msgid "Validation appearance"
+msgstr "Aspecto de la validación"
+
+#: includes/class-oliforge-cf7-country-select.php:642
+msgid "Show a validation border on the visible country selector"
+msgstr "Mostrar un borde de validación en el selector de países visible"
+
+#: includes/class-oliforge-cf7-country-select.php:644
+msgid "Disabled by default. The Contact Form 7 validation message and accessibility state remain active."
+msgstr "Desactivado de forma predeterminada. El mensaje de validación de Contact Form 7 y el estado de accesibilidad siguen activos."
+
+#: includes/class-oliforge-cf7-country-select.php:942
+msgid "OliForge Country Select:"
+msgstr "OliForge Selector de países:"
+
+#: includes/class-oliforge-cf7-country-select.php:943
+msgid "These fields reference a list: slug that can't be resolved right now, so they currently accept no valid country until fixed:"
+msgstr "Estos campos hacen referencia a un slug list: que no se puede resolver ahora, por lo que no aceptan ningún país válido hasta que se corrija:"
+
+#: oliforge-cf7-country-select.php:31
+msgid "OliForge Country Select requires Contact Form 7 to be active."
+msgstr "OliForge Selector de países requiere que Contact Form 7 esté activo."
