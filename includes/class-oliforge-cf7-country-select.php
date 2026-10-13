@@ -647,6 +647,12 @@ final class OliForge_CF7_Country_Select {
 				</table>
 				<?php self::render_country_checkbox_grid( self::OPTION_ALLOWED_COUNTRIES, $preview_countries, $allowed, 'allowed' ); ?>
 				<?php submit_button(); ?>
+				<?php if ( ! defined( 'OLIFORGE_CF7_COUNTRY_SELECT_PRO_VERSION' ) ) : ?>
+					<div class="oliforge-upgrade">
+						<span class="oliforge-upgrade__text"><?php echo esc_html__( 'Need more country select lists for different forms?', 'oliforge-cf7-country-select' ); ?></span>
+						<a class="button oliforge-upgrade__btn" href="<?php echo esc_url( 'https://oliforge.io/plugins/country-select-pro/' ); ?>" target="_blank" rel="noopener"><?php echo esc_html__( 'Get a Pro version', 'oliforge-cf7-country-select' ); ?></a>
+					</div>
+				<?php endif; ?>
 			</form>
 
 
