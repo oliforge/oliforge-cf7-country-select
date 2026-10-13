@@ -5,7 +5,7 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
-Stable tag: 3.2.8
+Stable tag: 3.2.9
 License: GPLv2 or later
 
 Adds a searchable, multilingual country selector with local SVG flags and server-side validation to Contact Form 7.
@@ -118,6 +118,12 @@ The ISO 3166-1 alpha-2 code is submitted. Translation affects display only.
 Automatic mode falls back to English.
 
 == Changelog ==
+
+= 3.2.9 =
+* Added an "Upgrade to Pro" link in the Plugins list (hidden once the Pro add-on is active).
+* Added a "Get a Pro version" prompt below Save Changes on the settings page (hidden once Country Select Pro is active).
+* Added the Plugin URI header linking to the plugin page on oliforge.io.
+* Credited the bundled flag-icons library (MIT) in the readme.
 
 = 3.2.8 =
 * Added translations: the plugin now loads its own text domain, with bundled German, Spanish, French, Russian and Ukrainian admin translations and a .pot template.
