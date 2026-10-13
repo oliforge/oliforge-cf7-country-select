@@ -3,8 +3,9 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: OliForge Country Select 3.2.9\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: OliForge Country Select 3.2.10\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oliforge-cf7-country-select\n"
+"POT-Creation-Date: 2026-10-13T09:00:07+00:00\n"
 "PO-Revision-Date: 2026-10-13 12:00+00:00\n"
 "Last-Translator: OliForge\n"
 "Language-Team: Ukrainian\n"
@@ -15,9 +16,33 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Domain: oliforge-cf7-country-select\n"
 
+#. Plugin Name of the plugin
 #: oliforge-cf7-country-select.php
-msgid "Adds an accessible, searchable and multilingual country selector with locally bundled SVG flags, administrator-controlled country availability, automatic locale detection and developer filters to Contact Form 7. Part of the OliForge™ plugin suite."
-msgstr "Додає до Contact Form 7 доступний, багатомовний вибір країни з пошуком, локально вбудованими SVG-прапорами, керуванням доступністю країн для адміністратора, автоматичним визначенням мови та фільтрами для розробників. Частина набору плагінів OliForge™."
+msgid "OliForge Country Select for Contact Form 7"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: oliforge-cf7-country-select.php
+msgid "https://oliforge.io/plugins/country-select/"
+msgstr ""
+
+#. Description of the plugin
+#: oliforge-cf7-country-select.php
+msgid ""
+"Adds an accessible, searchable and multilingual country selector with "
+"locally bundled SVG flags, administrator-controlled country availability, "
+"automatic locale detection and developer filters to Contact Form 7. Part of "
+"the OliForge™ plugin suite."
+msgstr ""
+"Додає до Contact Form 7 доступний, багатомовний вибір країни з пошуком, "
+"локально вбудованими SVG-прапорами, керуванням доступністю країн для "
+"адміністратора, автоматичним визначенням мови та фільтрами для розробників. "
+"Частина набору плагінів OliForge™."
+
+#. Author of the plugin
+#: oliforge-cf7-country-select.php
+msgid "OliForge™"
+msgstr ""
 
 #: includes/class-oliforge-cf7-country-select.php:59
 #: includes/class-oliforge-cf7-country-select.php:606
@@ -31,8 +56,12 @@ msgid "OliForge Country Select"
 msgstr "OliForge Вибір країни"
 
 #: includes/class-oliforge-cf7-country-select.php:74
-msgid "Generate a searchable country selector with local flags, translations, filtering and Contact Form 7 validation."
-msgstr "Створіть вибір країни з пошуком, локальними прапорами, перекладами, фільтрацією та валідацією Contact Form 7."
+msgid ""
+"Generate a searchable country selector with local flags, translations, "
+"filtering and Contact Form 7 validation."
+msgstr ""
+"Створіть вибір країни з пошуком, локальними прапорами, перекладами, "
+"фільтрацією та валідацією Contact Form 7."
 
 #: includes/class-oliforge-cf7-country-select.php:80
 msgid "Field type"
@@ -177,18 +206,27 @@ msgstr "Пошук в обраних"
 msgid "Remove all"
 msgstr "Видалити всі"
 
+#: includes/class-oliforge-cf7-country-select.php:599
+#: includes/class-oliforge-cf7-country-select.php:601
+msgid "OliForge"
+msgstr ""
+
 #: includes/class-oliforge-cf7-country-select.php:602
 msgid "Engineering without complexity."
 msgstr "Інженерія без складнощів."
 
 #: includes/class-oliforge-cf7-country-select.php:606
-#: oliforge-cf7-country-select.php:23
+#: oliforge-cf7-country-select.php:25
 msgid "Settings"
 msgstr "Налаштування"
 
 #: includes/class-oliforge-cf7-country-select.php:618
-msgid "Choose which countries are available in all Contact Form 7 country selectors. All countries are enabled by default."
-msgstr "Оберіть, які країни доступні в усіх полях вибору країни Contact Form 7. За замовчуванням увімкнено всі країни."
+msgid ""
+"Choose which countries are available in all Contact Form 7 country "
+"selectors. All countries are enabled by default."
+msgstr ""
+"Оберіть, які країни доступні в усіх полях вибору країни Contact Form 7. За "
+"замовчуванням увімкнено всі країни."
 
 #: includes/class-oliforge-cf7-country-select.php:623
 msgid "Country name language"
@@ -199,8 +237,12 @@ msgid "Automatic — use the current WordPress locale"
 msgstr "Автоматично — використовувати поточну мову WordPress"
 
 #: includes/class-oliforge-cf7-country-select.php:634
-msgid "A form tag can override this setting with language:en, language:de, language:es, language:fr, language:uk, or language:ru."
-msgstr "Form-tag може перевизначити це налаштування за допомогою language:en, language:de, language:es, language:fr, language:uk або language:ru."
+msgid ""
+"A form tag can override this setting with language:en, language:de, "
+"language:es, language:fr, language:uk, or language:ru."
+msgstr ""
+"Form-tag може перевизначити це налаштування за допомогою language:en, "
+"language:de, language:es, language:fr, language:uk або language:ru."
 
 #: includes/class-oliforge-cf7-country-select.php:638
 msgid "Validation appearance"
@@ -211,17 +253,37 @@ msgid "Show a validation border on the visible country selector"
 msgstr "Показувати рамку валідації на видимому полі вибору країни"
 
 #: includes/class-oliforge-cf7-country-select.php:644
-msgid "Disabled by default. The Contact Form 7 validation message and accessibility state remain active."
-msgstr "Вимкнено за замовчуванням. Повідомлення валідації Contact Form 7 і стан доступності залишаються активними."
+msgid ""
+"Disabled by default. The Contact Form 7 validation message and accessibility"
+" state remain active."
+msgstr ""
+"Вимкнено за замовчуванням. Повідомлення валідації Contact Form 7 і стан "
+"доступності залишаються активними."
 
-#: includes/class-oliforge-cf7-country-select.php:942
+#: includes/class-oliforge-cf7-country-select.php:652
+msgid "Need more country select lists for different forms?"
+msgstr "Потрібно більше списків країн для різних форм?"
+
+#: includes/class-oliforge-cf7-country-select.php:653
+msgid "Get a Pro version"
+msgstr "Отримати Pro-версію"
+
+#: includes/class-oliforge-cf7-country-select.php:948
 msgid "OliForge Country Select:"
 msgstr "OliForge Вибір країни:"
 
-#: includes/class-oliforge-cf7-country-select.php:943
-msgid "These fields reference a list: slug that can't be resolved right now, so they currently accept no valid country until fixed:"
-msgstr "Ці поля посилаються на slug list:, який зараз неможливо визначити, тому вони не приймають жодної дійсної країни, доки це не буде виправлено:"
+#: includes/class-oliforge-cf7-country-select.php:949
+msgid ""
+"These fields reference a list: slug that can't be resolved right now, so "
+"they currently accept no valid country until fixed:"
+msgstr ""
+"Ці поля посилаються на slug list:, який зараз неможливо визначити, тому вони"
+" не приймають жодної дійсної країни, доки це не буде виправлено:"
 
-#: oliforge-cf7-country-select.php:31
+#: oliforge-cf7-country-select.php:28
+msgid "Upgrade to Pro"
+msgstr "Перейти на Pro"
+
+#: oliforge-cf7-country-select.php:40
 msgid "OliForge Country Select requires Contact Form 7 to be active."
 msgstr "OliForge Вибір країни потребує активного Contact Form 7."

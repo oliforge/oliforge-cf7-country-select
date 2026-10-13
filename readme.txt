@@ -5,7 +5,7 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
-Stable tag: 3.2.9
+Stable tag: 3.2.10
 License: GPLv2 or later
 
 Adds a searchable, multilingual country selector with local SVG flags and server-side validation to Contact Form 7.
@@ -118,6 +118,9 @@ The ISO 3166-1 alpha-2 code is submitted. Translation affects display only.
 Automatic mode falls back to English.
 
 == Changelog ==
+
+= 3.2.10 =
+* Translated the "Upgrade to Pro" link and the Pro prompt on the settings page into German, Spanish, French, Russian and Ukrainian, and updated the translation template.
 
 = 3.2.9 =
 * Added an "Upgrade to Pro" link in the Plugins list (hidden once the Pro add-on is active).
