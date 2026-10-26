@@ -5,8 +5,9 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
-Stable tag: 3.2.10
+Stable tag: 3.2.11
 License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Adds a searchable, multilingual country selector with local SVG flags and server-side validation to Contact Form 7.
 
@@ -117,7 +118,17 @@ The ISO 3166-1 alpha-2 code is submitted. Translation affects display only.
 = What happens for an unsupported WordPress locale? =
 Automatic mode falls back to English.
 
+== Screenshots ==
+
+1. The country selector in a Contact Form 7 form: searchable dropdown with local SVG flags.
+2. Type a name or ISO code to filter the list instantly.
+3. Settings page: choose the name language and enable or disable countries globally.
+
 == Changelog ==
+
+= 3.2.11 =
+* Added Author URI and License URI headers and a Screenshots section.
+* Replaced the 96 KB settings-page logo with a 10 KB 128 px version (moved to assets/images/).
 
 = 3.2.10 =
 * Translated the "Upgrade to Pro" link and the Pro prompt on the settings page into German, Spanish, French, Russian and Ukrainian, and updated the translation template.

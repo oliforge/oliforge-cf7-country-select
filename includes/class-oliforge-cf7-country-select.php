@@ -596,7 +596,7 @@ final class OliForge_CF7_Country_Select {
 		<div class="wrap oliforge-country-settings">
 			<div class="oliforge-header">
 				<div class="oliforge-header__brand">
-					<img class="oliforge-header__logo" src="<?php echo esc_url( OLIFORGE_CF7_COUNTRY_SELECT_URL . 'src/OliForge_logo.png' ); ?>" alt="<?php esc_attr_e( 'OliForge', 'oliforge-cf7-country-select' ); ?>" width="64" height="64">
+					<img class="oliforge-header__logo" src="<?php echo esc_url( OLIFORGE_CF7_COUNTRY_SELECT_URL . 'assets/images/oliforge-logo.png' ); ?>" alt="<?php esc_attr_e( 'OliForge', 'oliforge-cf7-country-select' ); ?>" width="64" height="64">
 					<div class="oliforge-header__brandtext">
 						<span class="oliforge-header__name"><?php echo esc_html__( 'OliForge', 'oliforge-cf7-country-select' ); ?></span>
 						<span class="oliforge-header__tagline"><?php echo esc_html__( 'Engineering without complexity.', 'oliforge-cf7-country-select' ); ?></span>
