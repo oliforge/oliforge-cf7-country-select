@@ -104,9 +104,9 @@ final class OliForge_CF7_Country_Select {
 			<fieldset>
 				<legend><?php echo esc_html__( 'Country lists', 'oliforge-cf7-country-select' ); ?></legend>
 				<?php do_action( 'oliforge_country_select_tag_generator_country_lists' ); ?>
-				<label><?php echo esc_html__( 'Preferred ISO codes', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="preferred:" placeholder="UA,PL,DE" /></label><br>
-				<label><?php echo esc_html__( 'Include only', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="include:" placeholder="UA,PL,DE,FR" /></label><br>
-				<label><?php echo esc_html__( 'Exclude', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="exclude:" placeholder="RU,BY" /></label>
+				<label><?php echo esc_html__( 'Preferred ISO codes', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="preferred:" placeholder="UA|PL|DE" /></label><br>
+				<label><?php echo esc_html__( 'Include only', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="include:" placeholder="UA|PL|DE|FR" /></label><br>
+				<label><?php echo esc_html__( 'Exclude', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="exclude:" placeholder="RU|BY" /></label>
 			</fieldset>
 
 			<fieldset>

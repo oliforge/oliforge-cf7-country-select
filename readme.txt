@@ -5,7 +5,7 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
-Stable tag: 3.2.11
+Stable tag: 3.2.12
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,11 +61,11 @@ Language overrides:
 [country_select* your-country language:uk]
 [country_select* your-country language:ru]
 
-Advanced examples:
+Advanced examples (separate several ISO codes with a vertical bar "|"; Contact Form 7 does not accept commas inside tag options):
 [country_select* country id:country class:form-control tabindex:5 autocomplete:country language:de]
-[country_select country include:UA,PL,DE,FR]
-[country_select country exclude:RU,BY]
-[country_select country preferred:UA,PL,DE default:UA]
+[country_select country include:UA|PL|DE|FR]
+[country_select country exclude:RU|BY]
+[country_select country preferred:UA|PL|DE default:UA]
 [country_select country default:auto]
 
 The default:auto option uses the region part of the current WordPress locale when available, for example uk_UA => UA.
@@ -125,6 +125,9 @@ Automatic mode falls back to English.
 3. Settings page: choose the name language and enable or disable countries globally.
 
 == Changelog ==
+
+= 3.2.12 =
+* Fixed the documented syntax: several ISO codes in include:, exclude: and preferred: are separated with "|" (for example include:UA|PL|DE). Contact Form 7 does not parse commas in tag options, so the former comma examples in the readme and the tag generator placeholders produced a tag that was not recognized.
 
 = 3.2.11 =
 * Added Author URI and License URI headers and a Screenshots section.
