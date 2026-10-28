@@ -56,7 +56,7 @@ final class OliForge_CF7_Country_Select {
 		$tag_generator = WPCF7_TagGenerator::get_instance();
 		$tag_generator->add(
 			'country_select',
-			__( 'Country Select', 'oliforge-cf7-country-select' ),
+			__( 'Country Select', 'oliforge-country-select-for-contact-form-7' ),
 			array( __CLASS__, 'render_tag_generator' ),
 			array( 'version' => '2' )
 		);
@@ -70,74 +70,74 @@ final class OliForge_CF7_Country_Select {
 		?>
 
 		<header class="description-box">
-			<h3><?php echo esc_html__( 'OliForge Country Select', 'oliforge-cf7-country-select' ); ?></h3>
-			<p><?php echo esc_html__( 'Generate a searchable country selector with local flags, translations, filtering and Contact Form 7 validation.', 'oliforge-cf7-country-select' ); ?></p>
+			<h3><?php echo esc_html__( 'OliForge Country Select', 'oliforge-country-select-for-contact-form-7' ); ?></h3>
+			<p><?php echo esc_html__( 'Generate a searchable country selector with local flags, translations, filtering and Contact Form 7 validation.', 'oliforge-country-select-for-contact-form-7' ); ?></p>
 		</header>
 		<div class="control-box">
 			<input type="hidden" data-tag-part="basetype" value="country_select" />
 
 			<fieldset>
-				<legend id="<?php echo esc_attr( $ref( 'type' ) ); ?>"><?php echo esc_html__( 'Field type', 'oliforge-cf7-country-select' ); ?></legend>
-				<label><input type="checkbox" data-tag-part="type-suffix" value="*" /> <?php echo esc_html__( 'Required field', 'oliforge-cf7-country-select' ); ?></label>
+				<legend id="<?php echo esc_attr( $ref( 'type' ) ); ?>"><?php echo esc_html__( 'Field type', 'oliforge-country-select-for-contact-form-7' ); ?></legend>
+				<label><input type="checkbox" data-tag-part="type-suffix" value="*" /> <?php echo esc_html__( 'Required field', 'oliforge-country-select-for-contact-form-7' ); ?></label>
 			</fieldset>
 
 			<fieldset>
-				<legend id="<?php echo esc_attr( $ref( 'name' ) ); ?>"><?php echo esc_html__( 'Field name', 'oliforge-cf7-country-select' ); ?></legend>
+				<legend id="<?php echo esc_attr( $ref( 'name' ) ); ?>"><?php echo esc_html__( 'Field name', 'oliforge-country-select-for-contact-form-7' ); ?></legend>
 				<input type="text" required data-tag-part="name" value="country" pattern="[A-Za-z][A-Za-z0-9_\-]*" aria-labelledby="<?php echo esc_attr( $ref( 'name' ) ); ?>" />
 			</fieldset>
 
 			<fieldset>
-				<legend><?php echo esc_html__( 'Placeholder', 'oliforge-cf7-country-select' ); ?></legend>
-				<input type="text" data-tag-part="value" value="<?php echo esc_attr__( 'Select a country', 'oliforge-cf7-country-select' ); ?>" />
+				<legend><?php echo esc_html__( 'Placeholder', 'oliforge-country-select-for-contact-form-7' ); ?></legend>
+				<input type="text" data-tag-part="value" value="<?php echo esc_attr__( 'Select a country', 'oliforge-country-select-for-contact-form-7' ); ?>" />
 				<input type="hidden" data-tag-part="option" data-tag-option="placeholder" value="1" />
 			</fieldset>
 
 			<fieldset>
-				<legend><?php echo esc_html__( 'Language', 'oliforge-cf7-country-select' ); ?></legend>
+				<legend><?php echo esc_html__( 'Language', 'oliforge-country-select-for-contact-form-7' ); ?></legend>
 				<select data-tag-part="option" data-tag-option="language:">
-					<option value=""><?php echo esc_html__( 'Use plugin setting', 'oliforge-cf7-country-select' ); ?></option>
+					<option value=""><?php echo esc_html__( 'Use plugin setting', 'oliforge-country-select-for-contact-form-7' ); ?></option>
 					<option value="en">English</option><option value="de">Deutsch</option><option value="es">Español</option>
 					<option value="fr">Français</option><option value="uk">Українська</option><option value="ru">Русский</option>
 				</select>
 			</fieldset>
 
 			<fieldset>
-				<legend><?php echo esc_html__( 'Country lists', 'oliforge-cf7-country-select' ); ?></legend>
+				<legend><?php echo esc_html__( 'Country lists', 'oliforge-country-select-for-contact-form-7' ); ?></legend>
 				<?php do_action( 'oliforge_country_select_tag_generator_country_lists' ); ?>
-				<label><?php echo esc_html__( 'Preferred ISO codes', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="preferred:" placeholder="UA|PL|DE" /></label><br>
-				<label><?php echo esc_html__( 'Include only', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="include:" placeholder="UA|PL|DE|FR" /></label><br>
-				<label><?php echo esc_html__( 'Exclude', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="exclude:" placeholder="RU|BY" /></label>
+				<label><?php echo esc_html__( 'Preferred ISO codes', 'oliforge-country-select-for-contact-form-7' ); ?><br><input type="text" data-tag-part="option" data-tag-option="preferred:" placeholder="UA|PL|DE" /></label><br>
+				<label><?php echo esc_html__( 'Include only', 'oliforge-country-select-for-contact-form-7' ); ?><br><input type="text" data-tag-part="option" data-tag-option="include:" placeholder="UA|PL|DE|FR" /></label><br>
+				<label><?php echo esc_html__( 'Exclude', 'oliforge-country-select-for-contact-form-7' ); ?><br><input type="text" data-tag-part="option" data-tag-option="exclude:" placeholder="RU|BY" /></label>
 			</fieldset>
 
 			<fieldset>
-				<legend><?php echo esc_html__( 'Default and browser integration', 'oliforge-cf7-country-select' ); ?></legend>
-				<label><?php echo esc_html__( 'Default country', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="default:" placeholder="UA or auto" /></label><br>
-				<label><?php echo esc_html__( 'Autocomplete', 'oliforge-cf7-country-select' ); ?><br><input type="text" data-tag-part="option" data-tag-option="autocomplete:" value="country" /></label><br>
-				<label><?php echo esc_html__( 'Tab index', 'oliforge-cf7-country-select' ); ?><br><input type="number" data-tag-part="option" data-tag-option="tabindex:" /></label>
+				<legend><?php echo esc_html__( 'Default and browser integration', 'oliforge-country-select-for-contact-form-7' ); ?></legend>
+				<label><?php echo esc_html__( 'Default country', 'oliforge-country-select-for-contact-form-7' ); ?><br><input type="text" data-tag-part="option" data-tag-option="default:" placeholder="UA or auto" /></label><br>
+				<label><?php echo esc_html__( 'Autocomplete', 'oliforge-country-select-for-contact-form-7' ); ?><br><input type="text" data-tag-part="option" data-tag-option="autocomplete:" value="country" /></label><br>
+				<label><?php echo esc_html__( 'Tab index', 'oliforge-country-select-for-contact-form-7' ); ?><br><input type="number" data-tag-part="option" data-tag-option="tabindex:" /></label>
 			</fieldset>
 
 			<fieldset>
-				<legend><?php echo esc_html__( 'Interface', 'oliforge-cf7-country-select' ); ?></legend>
-				<label><input type="checkbox" data-tag-part="option" data-tag-option="nosearch" /> <?php echo esc_html__( 'Disable search', 'oliforge-cf7-country-select' ); ?></label><br>
-				<label><input type="checkbox" data-tag-part="option" data-tag-option="noflags" /> <?php echo esc_html__( 'Hide flags', 'oliforge-cf7-country-select' ); ?></label><br>
-				<label><input type="checkbox" data-tag-part="option" data-tag-option="nochevron" /> <?php echo esc_html__( 'Hide chevron', 'oliforge-cf7-country-select' ); ?></label>
+				<legend><?php echo esc_html__( 'Interface', 'oliforge-country-select-for-contact-form-7' ); ?></legend>
+				<label><input type="checkbox" data-tag-part="option" data-tag-option="nosearch" /> <?php echo esc_html__( 'Disable search', 'oliforge-country-select-for-contact-form-7' ); ?></label><br>
+				<label><input type="checkbox" data-tag-part="option" data-tag-option="noflags" /> <?php echo esc_html__( 'Hide flags', 'oliforge-country-select-for-contact-form-7' ); ?></label><br>
+				<label><input type="checkbox" data-tag-part="option" data-tag-option="nochevron" /> <?php echo esc_html__( 'Hide chevron', 'oliforge-country-select-for-contact-form-7' ); ?></label>
 			</fieldset>
 
 			<fieldset>
-				<legend><?php echo esc_html__( 'ID attribute', 'oliforge-cf7-country-select' ); ?></legend>
+				<legend><?php echo esc_html__( 'ID attribute', 'oliforge-country-select-for-contact-form-7' ); ?></legend>
 				<input type="text" data-tag-part="option" data-tag-option="id:" pattern="[A-Za-z][A-Za-z0-9_\-]*" />
 			</fieldset>
 			<fieldset>
-				<legend><?php echo esc_html__( 'Class attribute', 'oliforge-cf7-country-select' ); ?></legend>
+				<legend><?php echo esc_html__( 'Class attribute', 'oliforge-country-select-for-contact-form-7' ); ?></legend>
 				<input type="text" data-tag-part="option" data-tag-option="class:" pattern="[A-Za-z0-9_\-\s]*" placeholder="cs-field cs-field--country" />
 			</fieldset>
 		</div>
 		<footer class="insert-box">
 			<div class="flex-container">
-				<input type="text" class="code selectable" readonly data-tag-part="tag" aria-label="<?php echo esc_attr__( 'Generated form-tag', 'oliforge-cf7-country-select' ); ?>" />
-				<button type="button" class="button button-primary" data-taggen="insert-tag"><?php echo esc_html__( 'Insert Tag', 'oliforge-cf7-country-select' ); ?></button>
+				<input type="text" class="code selectable" readonly data-tag-part="tag" aria-label="<?php echo esc_attr__( 'Generated form-tag', 'oliforge-country-select-for-contact-form-7' ); ?>" />
+				<button type="button" class="button button-primary" data-taggen="insert-tag"><?php echo esc_html__( 'Insert Tag', 'oliforge-country-select-for-contact-form-7' ); ?></button>
 			</div>
-			<p class="mail-tag-tip"><?php echo esc_html__( 'Use this mail-tag in the Mail tab:', 'oliforge-cf7-country-select' ); ?> <input type="text" class="code selectable" readonly data-tag-part="mail-tag" /></p>
+			<p class="mail-tag-tip"><?php echo esc_html__( 'Use this mail-tag in the Mail tab:', 'oliforge-country-select-for-contact-form-7' ); ?> <input type="text" class="code selectable" readonly data-tag-part="mail-tag" /></p>
 		</footer>
 		<?php
 	}
@@ -175,8 +175,8 @@ final class OliForge_CF7_Country_Select {
 			return '';
 		}
 
-		wp_enqueue_style( 'oliforge-cf7-country-select' );
-		wp_enqueue_script( 'oliforge-cf7-country-select' );
+		wp_enqueue_style( 'oliforge-country-select-for-contact-form-7' );
+		wp_enqueue_script( 'oliforge-country-select-for-contact-form-7' );
 
 		$name        = sanitize_key( $tag->name );
 		$required    = $tag->is_required();
@@ -188,7 +188,7 @@ final class OliForge_CF7_Country_Select {
 		$show_validation_border = self::sanitize_validation_border( get_option( self::OPTION_VALIDATION_BORDER, '0' ) );
 
 		if ( ! is_string( $placeholder ) || '' === trim( $placeholder ) ) {
-			$placeholder = __( 'Select a country', 'oliforge-cf7-country-select' );
+			$placeholder = __( 'Select a country', 'oliforge-country-select-for-contact-form-7' );
 		}
 
 		$classes   = trim( $classes . ' ' . $extra_class );
@@ -225,8 +225,8 @@ final class OliForge_CF7_Country_Select {
 			'data-oliforge-country-select'   => '1',
 			'data-placeholder'               => $placeholder,
 			'data-visible-class'             => $visible_classes,
-			'data-search-placeholder'        => __( 'Search country', 'oliforge-cf7-country-select' ),
-			'data-no-results'                => __( 'No countries found', 'oliforge-cf7-country-select' ),
+			'data-search-placeholder'        => __( 'Search country', 'oliforge-country-select-for-contact-form-7' ),
+			'data-no-results'                => __( 'No countries found', 'oliforge-country-select-for-contact-form-7' ),
 			'data-search-enabled'             => in_array( 'nosearch', (array) $tag->options, true ) ? '0' : '1',
 			'data-show-flags'                 => in_array( 'noflags', (array) $tag->options, true ) ? '0' : '1',
 			'data-show-chevron'               => in_array( 'nochevron', (array) $tag->options, true ) ? '0' : '1',
@@ -293,11 +293,11 @@ final class OliForge_CF7_Country_Select {
 		$allowed     = self::resolve_country_context( $tag )['countries'];
 
 		if ( $is_present && ! $is_string ) {
-			$result->invalidate( $tag, __( 'Please select a valid country.', 'oliforge-cf7-country-select' ) );
+			$result->invalidate( $tag, __( 'Please select a valid country.', 'oliforge-country-select-for-contact-form-7' ) );
 		} elseif ( $tag->is_required() && ( ! $is_present || '' === $raw_trimmed || '' === $value ) ) {
 			$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
 		} elseif ( '' !== $raw_trimmed && ( '' === $value || ! isset( $allowed[ $value ] ) ) ) {
-			$result->invalidate( $tag, __( 'Please select a valid country.', 'oliforge-cf7-country-select' ) );
+			$result->invalidate( $tag, __( 'Please select a valid country.', 'oliforge-country-select-for-contact-form-7' ) );
 		} elseif ( '' !== $value ) {
 			// Keep all Contact Form 7 mail tags and integrations on the canonical ISO alpha-2 value.
 			$_POST[ $name ] = $value; // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
@@ -387,8 +387,8 @@ final class OliForge_CF7_Country_Select {
 
 	public static function register_settings_page(): void {
 		add_options_page(
-			__( 'OliForge Country Select', 'oliforge-cf7-country-select' ),
-			__( 'OliForge Country Select', 'oliforge-cf7-country-select' ),
+			__( 'OliForge Country Select', 'oliforge-country-select-for-contact-form-7' ),
+			__( 'OliForge Country Select', 'oliforge-country-select-for-contact-form-7' ),
 			'manage_options',
 			'oliforge-cf7-country-select',
 			array( __CLASS__, 'render_settings_page' )
@@ -489,9 +489,9 @@ final class OliForge_CF7_Country_Select {
 		?>
 		<div class="oliforge-country-grid-picker" data-oliforge-grid-picker="<?php echo esc_attr( $picker_id ); ?>">
 			<div class="oliforge-country-settings__toolbar">
-				<input type="search" class="regular-text" data-role="search" placeholder="<?php echo esc_attr__( 'Search countries', 'oliforge-cf7-country-select' ); ?>">
-				<button type="button" class="button" data-role="select-all"><?php echo esc_html__( 'Select all', 'oliforge-cf7-country-select' ); ?></button>
-				<button type="button" class="button" data-role="clear-all"><?php echo esc_html__( 'Clear all', 'oliforge-cf7-country-select' ); ?></button>
+				<input type="search" class="regular-text" data-role="search" placeholder="<?php echo esc_attr__( 'Search countries', 'oliforge-country-select-for-contact-form-7' ); ?>">
+				<button type="button" class="button" data-role="select-all"><?php echo esc_html__( 'Select all', 'oliforge-country-select-for-contact-form-7' ); ?></button>
+				<button type="button" class="button" data-role="clear-all"><?php echo esc_html__( 'Clear all', 'oliforge-country-select-for-contact-form-7' ); ?></button>
 				<span class="oliforge-country-settings__count" data-role="count" aria-live="polite"></span>
 			</div>
 			<div class="oliforge-country-settings__grid">
@@ -527,10 +527,10 @@ final class OliForge_CF7_Country_Select {
 			<div class="oliforge-transfer">
 				<div class="oliforge-transfer__col">
 					<div class="oliforge-transfer__head">
-						<strong><?php echo esc_html__( 'All countries', 'oliforge-cf7-country-select' ); ?></strong>
+						<strong><?php echo esc_html__( 'All countries', 'oliforge-country-select-for-contact-form-7' ); ?></strong>
 						<span class="oliforge-transfer__count" data-role="available-count"></span>
 					</div>
-					<input type="search" class="regular-text" data-role="available-search" placeholder="<?php echo esc_attr__( 'Search countries', 'oliforge-cf7-country-select' ); ?>">
+					<input type="search" class="regular-text" data-role="available-search" placeholder="<?php echo esc_attr__( 'Search countries', 'oliforge-country-select-for-contact-form-7' ); ?>">
 					<ul class="oliforge-transfer__list" data-role="available-list">
 						<?php
 						foreach ( $countries as $code => $country ) :
@@ -542,14 +542,14 @@ final class OliForge_CF7_Country_Select {
 						endforeach;
 						?>
 					</ul>
-					<button type="button" class="button oliforge-transfer__all" data-role="add-all"><?php echo esc_html__( 'Add all', 'oliforge-cf7-country-select' ); ?> »</button>
+					<button type="button" class="button oliforge-transfer__all" data-role="add-all"><?php echo esc_html__( 'Add all', 'oliforge-country-select-for-contact-form-7' ); ?> »</button>
 				</div>
 				<div class="oliforge-transfer__col">
 					<div class="oliforge-transfer__head">
-						<strong><?php echo esc_html__( 'Selected countries', 'oliforge-cf7-country-select' ); ?></strong>
+						<strong><?php echo esc_html__( 'Selected countries', 'oliforge-country-select-for-contact-form-7' ); ?></strong>
 						<span class="oliforge-transfer__count" data-role="selected-count"></span>
 					</div>
-					<input type="search" class="regular-text" data-role="selected-search" placeholder="<?php echo esc_attr__( 'Search selected', 'oliforge-cf7-country-select' ); ?>">
+					<input type="search" class="regular-text" data-role="selected-search" placeholder="<?php echo esc_attr__( 'Search selected', 'oliforge-country-select-for-contact-form-7' ); ?>">
 					<ul class="oliforge-transfer__list" data-role="selected-list">
 						<?php
 						$order = 0;
@@ -562,7 +562,7 @@ final class OliForge_CF7_Country_Select {
 						endforeach;
 						?>
 					</ul>
-					<button type="button" class="button oliforge-transfer__all" data-role="remove-all">« <?php echo esc_html__( 'Remove all', 'oliforge-cf7-country-select' ); ?></button>
+					<button type="button" class="button oliforge-transfer__all" data-role="remove-all">« <?php echo esc_html__( 'Remove all', 'oliforge-country-select-for-contact-form-7' ); ?></button>
 				</div>
 			</div>
 		</div>
@@ -596,14 +596,14 @@ final class OliForge_CF7_Country_Select {
 		<div class="wrap oliforge-country-settings">
 			<div class="oliforge-header">
 				<div class="oliforge-header__brand">
-					<img class="oliforge-header__logo" src="<?php echo esc_url( OLIFORGE_CF7_COUNTRY_SELECT_URL . 'assets/images/oliforge-logo.png' ); ?>" alt="<?php esc_attr_e( 'OliForge', 'oliforge-cf7-country-select' ); ?>" width="64" height="64">
+					<img class="oliforge-header__logo" src="<?php echo esc_url( OLIFORGE_CF7_COUNTRY_SELECT_URL . 'assets/images/oliforge-logo.png' ); ?>" alt="<?php esc_attr_e( 'OliForge', 'oliforge-country-select-for-contact-form-7' ); ?>" width="64" height="64">
 					<div class="oliforge-header__brandtext">
-						<span class="oliforge-header__name"><?php echo esc_html__( 'OliForge', 'oliforge-cf7-country-select' ); ?></span>
-						<span class="oliforge-header__tagline"><?php echo esc_html__( 'Engineering without complexity.', 'oliforge-cf7-country-select' ); ?></span>
+						<span class="oliforge-header__name"><?php echo esc_html__( 'OliForge', 'oliforge-country-select-for-contact-form-7' ); ?></span>
+						<span class="oliforge-header__tagline"><?php echo esc_html__( 'Engineering without complexity.', 'oliforge-country-select-for-contact-form-7' ); ?></span>
 					</div>
 				</div>
 				<div class="oliforge-header__title">
-					<h1><?php echo esc_html__( 'Country Select', 'oliforge-cf7-country-select' ); ?> <span class="oliforge-accent"><?php echo esc_html__( 'Settings', 'oliforge-cf7-country-select' ); ?></span></h1>
+					<h1><?php echo esc_html__( 'Country Select', 'oliforge-country-select-for-contact-form-7' ); ?> <span class="oliforge-accent"><?php echo esc_html__( 'Settings', 'oliforge-country-select-for-contact-form-7' ); ?></span></h1>
 					<span class="oliforge-badge oliforge-badge--version">v<?php echo esc_html( OLIFORGE_CF7_COUNTRY_SELECT_VERSION ); ?></span>
 				</div>
 			</div>
@@ -615,15 +615,15 @@ final class OliForge_CF7_Country_Select {
 			 */
 			?>
 			<hr class="wp-header-end">
-			<p class="oliforge-lede"><?php echo esc_html__( 'Choose which countries are available in all Contact Form 7 country selectors. All countries are enabled by default.', 'oliforge-cf7-country-select' ); ?></p>
+			<p class="oliforge-lede"><?php echo esc_html__( 'Choose which countries are available in all Contact Form 7 country selectors. All countries are enabled by default.', 'oliforge-country-select-for-contact-form-7' ); ?></p>
 			<form method="post" action="options.php" class="oliforge-card">
 				<?php settings_fields( 'oliforge_cf7_country_select_settings' ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
-						<th scope="row"><label for="oliforge-country-display-language"><?php echo esc_html__( 'Country name language', 'oliforge-cf7-country-select' ); ?></label></th>
+						<th scope="row"><label for="oliforge-country-display-language"><?php echo esc_html__( 'Country name language', 'oliforge-country-select-for-contact-form-7' ); ?></label></th>
 						<td>
 							<select id="oliforge-country-display-language" class="oliforge-select" name="<?php echo esc_attr( self::OPTION_DISPLAY_LANGUAGE ); ?>">
-								<option value="auto" <?php selected( $language_setting, 'auto' ); ?>><?php echo esc_html__( 'Automatic — use the current WordPress locale', 'oliforge-cf7-country-select' ); ?></option>
+								<option value="auto" <?php selected( $language_setting, 'auto' ); ?>><?php echo esc_html__( 'Automatic — use the current WordPress locale', 'oliforge-country-select-for-contact-form-7' ); ?></option>
 								<option value="en" <?php selected( $language_setting, 'en' ); ?>>English</option>
 								<option value="de" <?php selected( $language_setting, 'de' ); ?>>Deutsch</option>
 								<option value="es" <?php selected( $language_setting, 'es' ); ?>>Español</option>
@@ -631,17 +631,17 @@ final class OliForge_CF7_Country_Select {
 								<option value="uk" <?php selected( $language_setting, 'uk' ); ?>>Українська</option>
 								<option value="ru" <?php selected( $language_setting, 'ru' ); ?>>Русский</option>
 							</select>
-							<p class="description"><?php echo esc_html__( 'A form tag can override this setting with language:en, language:de, language:es, language:fr, language:uk, or language:ru.', 'oliforge-cf7-country-select' ); ?></p>
+							<p class="description"><?php echo esc_html__( 'A form tag can override this setting with language:en, language:de, language:es, language:fr, language:uk, or language:ru.', 'oliforge-country-select-for-contact-form-7' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php echo esc_html__( 'Validation appearance', 'oliforge-cf7-country-select' ); ?></th>
+						<th scope="row"><?php echo esc_html__( 'Validation appearance', 'oliforge-country-select-for-contact-form-7' ); ?></th>
 						<td>
 							<label>
 								<input type="checkbox" name="<?php echo esc_attr( self::OPTION_VALIDATION_BORDER ); ?>" value="1" <?php checked( $validation_border, '1' ); ?>>
-								<?php echo esc_html__( 'Show a validation border on the visible country selector', 'oliforge-cf7-country-select' ); ?>
+								<?php echo esc_html__( 'Show a validation border on the visible country selector', 'oliforge-country-select-for-contact-form-7' ); ?>
 							</label>
-							<p class="description"><?php echo esc_html__( 'Disabled by default. The Contact Form 7 validation message and accessibility state remain active.', 'oliforge-cf7-country-select' ); ?></p>
+							<p class="description"><?php echo esc_html__( 'Disabled by default. The Contact Form 7 validation message and accessibility state remain active.', 'oliforge-country-select-for-contact-form-7' ); ?></p>
 						</td>
 					</tr>
 				</table>
@@ -649,8 +649,8 @@ final class OliForge_CF7_Country_Select {
 				<?php submit_button(); ?>
 				<?php if ( ! defined( 'OLIFORGE_CF7_COUNTRY_SELECT_PRO_VERSION' ) ) : ?>
 					<div class="oliforge-upgrade">
-						<span class="oliforge-upgrade__text"><?php echo esc_html__( 'Need more country select lists for different forms?', 'oliforge-cf7-country-select' ); ?></span>
-						<a class="button oliforge-upgrade__btn" href="<?php echo esc_url( 'https://oliforge.io/plugins/country-select-pro/' ); ?>" target="_blank" rel="noopener"><?php echo esc_html__( 'Get a Pro version', 'oliforge-cf7-country-select' ); ?></a>
+						<span class="oliforge-upgrade__text"><?php echo esc_html__( 'Need more country select lists for different forms?', 'oliforge-country-select-for-contact-form-7' ); ?></span>
+						<a class="button oliforge-upgrade__btn" href="<?php echo esc_url( 'https://oliforge.io/plugins/country-select-pro/' ); ?>" target="_blank" rel="noopener"><?php echo esc_html__( 'Get a Pro version', 'oliforge-country-select-for-contact-form-7' ); ?></a>
 					</div>
 				<?php endif; ?>
 			</form>
@@ -945,8 +945,8 @@ final class OliForge_CF7_Country_Select {
 			return;
 		}
 
-		echo '<div class="notice notice-warning"><p><strong>' . esc_html__( 'OliForge Country Select:', 'oliforge-cf7-country-select' ) . '</strong> '
-			. esc_html__( 'These fields reference a list: slug that can\'t be resolved right now, so they currently accept no valid country until fixed:', 'oliforge-cf7-country-select' )
+		echo '<div class="notice notice-warning"><p><strong>' . esc_html__( 'OliForge Country Select:', 'oliforge-country-select-for-contact-form-7' ) . '</strong> '
+			. esc_html__( 'These fields reference a list: slug that can\'t be resolved right now, so they currently accept no valid country until fixed:', 'oliforge-country-select-for-contact-form-7' )
 			. '</p><ul style="list-style:disc;margin-left:1.5em;">';
 		foreach ( $problems as $problem ) {
 			printf(
