@@ -5,7 +5,7 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
-Stable tag: 3.2.13
+Stable tag: 3.2.14
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -125,6 +125,9 @@ Automatic mode falls back to English.
 3. Settings page: choose the name language and enable or disable countries globally.
 
 == Changelog ==
+
+= 3.2.14 =
+* Fixed the stylesheet and script of the country selector not loading after the 3.2.13 text domain change (the flags and styling were missing).
 
 = 3.2.13 =
 * Changed the text domain to oliforge-country-select-for-contact-form-7 to match the plugin directory slug. Translation files were renamed accordingly; there are no functional changes.

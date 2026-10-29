@@ -175,8 +175,8 @@ final class OliForge_CF7_Country_Select {
 			return '';
 		}
 
-		wp_enqueue_style( 'oliforge-country-select-for-contact-form-7' );
-		wp_enqueue_script( 'oliforge-country-select-for-contact-form-7' );
+		wp_enqueue_style( 'oliforge-cf7-country-select' );
+		wp_enqueue_script( 'oliforge-cf7-country-select' );
 
 		$name        = sanitize_key( $tag->name );
 		$required    = $tag->is_required();
